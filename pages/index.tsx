@@ -1,58 +1,59 @@
-import Container from '../components/container'
-import MoreStories from '../components/more-stories'
-import HeroPost from '../components/hero-post'
-import Intro from '../components/intro'
-import Layout from '../components/layout'
-import { getAllPosts } from '../lib/api'
-import Head from 'next/head'
-import { CMS_NAME } from '../lib/constants'
-import Post from '../types/post'
+import Link from 'next/link';
 
-type Props = {
-  allPosts: Post[]
-}
+import { GetStaticProps } from 'next';
+import { getPosts } from '../lib/api';
+import Post from '../types/post';
+import Container from '../components/common/Container';
+import Layout from '../components/layout';
+import formatDate from '../lib/formatDate';
+import {
+  ArticleContent,
+  ArticleWrapper,
+  DateWrapper,
+  ReadMoreLink,
+  TitleLink,
+} from '../components/Article';
 
-const Index = ({ allPosts }: Props) => {
-  const heroPost = allPosts[0]
-  const morePosts = allPosts.slice(1)
-  return (
-    <>
-      <Layout>
-        <Head>
-          <title>Next.js Blog Example with {CMS_NAME}</title>
-        </Head>
+type IndexProps = {
+  posts: Post[]
+};
+
+const Index = ({ posts }: IndexProps) => (
+  <Layout>
+    {posts.map((post) => (
+      <ArticleWrapper key={post.slug}>
         <Container>
-          <Intro />
-          {heroPost && (
-            <HeroPost
-              title={heroPost.title}
-              coverImage={heroPost.coverImage}
-              date={heroPost.date}
-              author={heroPost.author}
-              slug={heroPost.slug}
-              excerpt={heroPost.excerpt}
-            />
-          )}
-          {morePosts.length > 0 && <MoreStories posts={morePosts} />}
+          <Link href={`/${post.slug}`} passHref>
+            <TitleLink>{post.title}</TitleLink>
+          </Link>
+          <DateWrapper>{formatDate(post.date)}</DateWrapper>
+
+          <ArticleContent
+            dangerouslySetInnerHTML={{
+              __html: post.excerpt,
+            }}
+          />
+
+          <Link href={`/${post.slug}`} passHref>
+            <ReadMoreLink>Read More →</ReadMoreLink>
+          </Link>
         </Container>
-      </Layout>
-    </>
-  )
-}
+      </ArticleWrapper>
+    ))}
+  </Layout>
+);
 
-export default Index
+export default Index;
 
-export const getStaticProps = async () => {
-  const allPosts = getAllPosts([
+export const getStaticProps: GetStaticProps = async () => {
+  const posts = await getPosts([
     'title',
     'date',
     'slug',
-    'author',
-    'coverImage',
     'excerpt',
-  ])
+  ]);
 
   return {
-    props: { allPosts },
-  }
-}
+    props: { posts },
+  };
+};

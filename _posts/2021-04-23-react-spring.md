@@ -1,0 +1,315 @@
+---
+title: 使用 react-spring 打造流暢的使用者體驗
+categories:
+  - tutorial
+tags:
+  - javascript
+  - react
+  - react-spring
+date: 2021-04-23 12:00:00
+---
+
+[react-spring](https://github.com/pmndrs/react-spring) 是我在公司的 design system 內使用兩年以上的套件，其主要提供基於 React Hooks 的 API，取代 CSS 實作動態 UI，除此之外還完整支援 TypeScript。
+
+個人認為 react-spring 在打造 UX 時的輕鬆程度遠大於 CSS，基於 requestAnimationFrame 所實作的動畫也不會像傳統 JavaScript 動畫套件拖垮效能。再加上[社群人士](https://react-spring.io/#people-sayy)的大力推薦，個人將此套件作為在 react 實作動畫的首選。
+
+<!-- more -->
+
+### 什麼是 Spring?
+
+> 強烈建議閱讀套件官網的 [Why springs and not durations](https://react-spring.io/#why-springs-and-not-durations) 章節
+
+在 react-spring 的世界裡使用的原理如其名稱，稱之為 `spring`（彈簧）。
+
+回想過去使用 CSS 實作動畫時，我們基本上都會定義動畫的曲線函式、動畫的時間長短。而 spring 不同於 CSS 動畫，它模擬了現實世界中彈簧的運作，讓我們輕鬆的實作出流暢且自然舒適的動畫。
+
+
+![](https://i.imgur.com/tg1mN1F.gif)
+
+
+官方 README 中也引用了 Apple 前 UI-Kit 開發者 Andy Matuschak 所說的：
+
+> Animation APIs parameterized by duration and curve are fundamentally opposed to continuous, fluid interactivity.
+> 透過曲線及時間參數 API 所做的動畫，本質上與連續且流暢的互動大相徑庭
+
+CSS 動畫要用在 react 的世界中有點反直覺，像是早期的 [React Transition Group](https://reactcommunity.org/react-transition-group/)，除了定義相關參數外，還要設定對應的 className，同樣的功能在 react-spring 只需要使用直觀簡單的 useTransition 就可以達成。
+
+### API
+
+#### useSpring
+
+react-spring 中最基本的 API 就是 useSpring，用於數值間的 transition，一個簡單的範例可以寫成這樣：
+
+```jsx
+const App = () => {
+  const [open, setOpen] = useState(false);
+  const props = useSpring({ width: open ? 240 : 0 });
+
+  return (
+    <animated.div
+      style={{
+        height: 80,
+        backgroundColor: 'red',
+        ...props,
+      }}
+      onClick={() => setOpen(prev => !prev)}
+    >
+      {props.width.to(x => x.toFixed(0))}
+    </animated.div>
+  );
+};
+```
+
+當按下該 div 後就會將 width 從 80px transition 到 240px，children 也會顯示對應的數值。
+
+特別要注意的是，所有 react-spring 給的 props 都是 [SpringValue](https://react-spring.io/classes/spring-value)，若要讓其作為 style 使用，就要放到 react-spring 提供的 `animated.x` 元件。
+
+除了數值外，參數也支援字串間的轉換：
+
+```typescript
+const props = useSpring({
+  transform: open ? 'translateY(0)' : 'translateY(100px)',
+});
+```
+
+useSpring 常見的使用情境例如﹔一個可以打開／收合的 Collapse 元件、enable／disable 時會改變 toggle 位置的 Switch 元件。
+
+<iframe src="https://codesandbox.io/embed/github/pmndrs/react-spring/tree/master/demo/src/sandboxes/animating-auto?fontsize=14&hidenavigation=1&theme=dark"
+  style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;"
+  title="spring-animating-auto"
+  allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
+  sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
+></iframe>
+
+> 官方範例。更多的 API 使用方式及範例可參考官方文件的 [useSpring](https://react-spring.io/hooks/use-spring) 章節
+
+#### useSprings
+
+與 useSpring 類似，差別在 useSprings 操作的是一個 array 的 spring：
+
+```jsx
+const springs = useSprings(
+  number,
+  items.map(item => ({ opacity: item.opacity })),
+);
+
+return springs.map(styles => <animated.div style={styles} />)
+```
+
+<iframe src="https://codesandbox.io/embed/github/pmndrs/react-spring/tree/master/demo/src/sandboxes/draggable-list?fontsize=14&hidenavigation=1&theme=dark"
+     style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;"
+     title="spring-draggable-list"
+     allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
+     sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
+   ></iframe>
+
+> 官方範例。更多的 API 使用方式及範例可參考官方文件的 [useSpring](https://react-spring.io/hooks/use-springs) 章節
+
+#### useTransition
+
+useTransition 應該是最常用的 hooks，用於實作單一元件或列表 mount／unmount 的動畫效果，避免僵直的元件切換讓使用者感到錯愕：
+
+```jsx
+const App = () => {
+  const [toggle, setToggle] = useState(false);
+  const transitions = useTransition(toggle, {
+    from: { opacity: 0 },
+    enter: { opacity: 1 },
+    leave: { opacity: 0 },
+  });
+
+  return (
+    <>
+      <button onClick={() => setToggle(prev => !prev)}>
+        toggle
+      </button>
+      {transitions((props, item) => item && (
+        <animated.div style={props}>
+          😄
+        </animated.div>
+      ))}
+    </>
+  );
+};
+```
+
+<iframe src="https://codesandbox.io/embed/github/pmndrs/react-spring/tree/master/demo/src/sandboxes/simple-transition?fontsize=14&hidenavigation=1&theme=dark"
+     style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;"
+     title="spring-simple-transition"
+     allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
+     sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
+   ></iframe>
+
+> 官方範例。更多的 API 使用方式及範例可參考官方文件的 [useTransition](https://react-spring.io/hooks/use-transition) 章節。
+
+
+#### useTrial
+
+與 useSprings 類似，差別在每一個 spring 會跟在前一個後面，不會同時觸發。
+
+```jsx
+const trail = useTrail(amount, { opacity: 1 });
+
+return trail.map(styles => <animated.div style={styles} />);
+```
+
+<iframe src="https://codesandbox.io/embed/github/pmndrs/react-spring/tree/master/demo/src/sandboxes/trail?fontsize=14&hidenavigation=1&theme=dark"
+     style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;"
+     title="spring-trail"
+     allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
+     sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
+   ></iframe>
+
+> 官方範例。更多的 API 使用方式及範例可參考官方文件的 [useTrial](https://react-spring.io/hooks/use-trail) 章節。
+
+#### useChain
+
+用於連結不同 spring hooks 的動畫效果，讓下個動畫的作動時間會接在前一個完成後接續執行。
+
+也可以設定 delay 時間在前一動畫完成時，經過指定時間後再執行下個動畫。以下節錄官方範例：
+
+
+```typescript
+const springRef = useSpringRef();
+const props = useSpring({ ...values, ref: springRef });
+
+const transitionRef = useSpringRef();
+const transitions = useTransition({ ...values, ref: transitionRef });
+// 先執行前個 spring 完成動畫後執行 transition
+useChain([springRef, transitionRef]);
+
+return (
+  <animated.div style={props}>
+    {transitions(styles => (
+      <animated.div style={styles} />
+    ))}
+  </animated.div>
+);
+```
+
+> 這邊要注意在 v9 以前的 ref 使用的是 react 的 `useRef`，v9 之後需要使用 react-spring 提供的 `useSpringRef`。
+
+<iframe src="https://codesandbox.io/embed/github/pmndrs/react-spring/tree/master/demo/src/sandboxes/chain?fontsize=14&hidenavigation=1&theme=dark"
+     style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;"
+     title="spring-chain"
+     allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
+     sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
+   ></iframe>
+
+> 官方範例。更多的 API 使用方式及範例可參考官方文件的 [useChain](https://react-spring.io/hooks/use-chain) 章節。
+
+### config
+
+> 完整的參數請參考官方的 [Config](https://react-spring.io/common/configs) 章節。
+
+一般在使用 react-spring 時不會特別調整 config，但在一些情況時（例如想要感覺比較緊湊／放鬆的動畫效果），可以使用官方預先提供好的 preset
+
+```javascript
+import { useSpring, config } from 'react-spring';
+
+useSpring({ ..., config: config.stiff });
+```
+
+不同 preset 造就的效果也不同，像範例的 stiff 就是較緊湊的動畫模式，更多 preset 可以參觀官方文件的 [Presets](https://react-spring.io/common/configs#presets)。
+
+
+<iframe src="https://codesandbox.io/embed/react-spring-preset-configs-kdv7r?fontsize=14&hidenavigation=1&theme=dark"
+     style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;"
+     title="react-spring-preset-configs"
+     allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
+     sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
+   ></iframe>
+
+
+而除了預先提供的 preset 外，也可以手動調整 config 內的各種不同參數，以下就介紹幾個比較常調整的參數：
+
+- `mass`：質量
+- `tension`：張力
+- `friction`：摩擦力
+- `velocity`：速度
+- `precision`：精確度
+
+除此之外也支援傳統 CSS 動畫的曲線函數及時間，更多的參數可以參考官方文件的 [Config](https://react-spring.io/common/configs#configs)。
+
+<iframe src="https://codesandbox.io/embed/react-spring-config-x1vjb?fontsize=14&hidenavigation=1&theme=dark"
+     style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;"
+     title="react-spring-config"
+     allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
+     sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
+   ></iframe>
+
+### a11y & testing
+
+前陣子 react-spring 推出 v9.0.0 時，同時開放了一個 `Global.assign` API，方便全域設定 `react-spring` 的參數。
+
+其中一個對我來說相當重要的參數就是 `skipAnimation`，顧名思義將這個參數設定為 `true` 後就會將所有 react-spring 的動畫關閉。這個參數在使用的裝置啟用「減少動態效果」時搭配使用就可以為使用者關閉動畫。
+
+這部分可以參考官方文件的 [Accessibility](https://react-spring.io/guides/accessibility#accessibility) 章節，以下節錄部分程式碼感受一下：
+
+
+```javascript
+import { useReducedMotion } from 'react-reduce-motion';
+import { Globals } from 'react-spring';
+
+const App = () => {
+  const prefersReducedMotion = useReducedMotion();
+
+  useEffect(() => {
+    Globals.assign({
+      skipAnimation: prefersReducedMotion,
+    });
+  }, [prefersReducedMotion]);
+  // ...
+};
+
+```
+
+
+為什麼說這個參數相當重要呢？因為在實作 design system 時勢必要為所有元件寫測試，而測試時動畫反而會成為邏輯測試上的阻礙，必須等待動畫完成才能知道邏輯的結果。
+
+例如每次點擊 Select 時 menu 跳出的動畫所耗費的時間，在 test cases 有 n 筆時，就會延後測試 n 倍的時間。過去一直以來我都是使用全域複寫的方式，手動強制讓所有 requestAnimationFrame flush：
+
+
+```typescript
+import createMockRaf, { MockRaf } from '@react-spring/mock-raf';
+
+let mockRaf: MockRaf & { flushSpring: () => void };
+const raf = window.requestAnimationFrame;
+const caf = window.cancelAnimationFrame;
+
+const useMockRaf = () => {
+  beforeAll(() => {
+    const createdMockRaf = createMockRaf();
+    mockRaf = {
+      ...createdMockRaf,
+      flushSpring: () => mockRaf.step({ count: 32767 }),
+    };
+
+    window.requestAnimationFrame = mockRaf.raf;
+    window.cancelAnimationFrame = mockRaf.cancel;
+  });
+
+  afterAll(() => {
+    window.requestAnimationFrame = raf;
+    window.cancelAnimationFrame = caf;
+  });
+};
+
+export { mockRaf, useMockRaf };
+```
+
+如今只要在測試前的 preload file 加上：
+
+```typescript
+Globals.assign({
+  skipAnimation: true,
+});
+```
+
+就可以在測試跳過所有動畫了。
+
+### 結語
+
+除了以上有簡單提到的以外，react-spring 的 API 還有很多值得挖掘的部分，尤其在 v9 推出之後 API 變得更容易使用，像是： [imperative API](https://react-spring.io/common/imperatives-and-refs#imperative-api)、[async animations](https://react-spring.io/changelog#improved-async-animations)、[完整的 animation events](https://react-spring.io/common/props#events) 等族繁不及備載。
+
+如果你的專案有動畫的需求，強烈推薦可以試試看！保證也會愛上這簡潔易用的 API 和自然流暢的動畫體驗。
