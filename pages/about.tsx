@@ -1,10 +1,10 @@
-import Head from 'next/head';
 import { GetStaticProps } from 'next';
 
 import Layout from '../components/layout';
 import { ArticleContent } from '../components/Article';
 import { Container, TitleSection } from '../components/common';
 import markdownToHtml from '../lib/markdownToHtml';
+import MetaData from '../components/MetaData';
 
 const about = `
 
@@ -76,9 +76,10 @@ interface AboutPageProps {
 
 const AboutPage = ({ content }: AboutPageProps) => (
   <Layout>
-    <Head>
-      <title>ABOUT · JIGSAWYE</title>
-    </Head>
+    <MetaData
+      title="ABOUT"
+      uri="about"
+    />
 
     <TitleSection>About</TitleSection>
 

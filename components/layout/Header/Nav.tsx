@@ -18,10 +18,6 @@ const NavWrapper = styled.div`
     text-decoration: none;
     transition: color 0.2s ease;
 
-    &.active {
-      color: #000;
-    }
-
     :hover {
       background: none;
       color: #000;

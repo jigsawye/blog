@@ -13,6 +13,7 @@ import {
   ReadMoreLink,
   TitleLink,
 } from '../components/Article';
+import MetaData from '../components/MetaData';
 
 type IndexProps = {
   posts: Post[]
@@ -20,6 +21,8 @@ type IndexProps = {
 
 const Index = ({ posts }: IndexProps) => (
   <Layout>
+    <MetaData />
+
     {posts.map((post) => (
       <ArticleWrapper key={post.slug}>
         <Container>

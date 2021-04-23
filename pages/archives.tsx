@@ -1,4 +1,3 @@
-import Head from 'next/head';
 import { GetStaticProps } from 'next';
 import { getPosts } from '../lib/api';
 
@@ -9,6 +8,7 @@ import ArchivesWrapper from '../components/Archives/ArchivesWrapper';
 import { Container, TitleSection } from '../components/common';
 import { DateWrapper, TitleLink } from '../components/Article';
 import { SITE_URL } from '../lib/constants';
+import MetaData from '../components/MetaData';
 
 type ArchivesProps = {
   Posts: Post[]
@@ -16,10 +16,13 @@ type ArchivesProps = {
 
 const ArchivesPage = ({ Posts }: ArchivesProps) => (
   <Layout>
-    <Head>
-      <title>ARCHIVES · JIGSAWYE</title>
-    </Head>
+    <MetaData
+      title="ARCHIVES"
+      uri="archives"
+    />
+
     <TitleSection>Archives</TitleSection>
+
     {Posts.map((post) => (
       <ArchivesWrapper key={post.slug}>
         <Container>

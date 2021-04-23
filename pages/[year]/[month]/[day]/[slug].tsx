@@ -7,9 +7,8 @@ import PostType from '../../../../types/post';
 import Container from '../../../../components/common/Container';
 import Disqus from '../../../../components/Disqus';
 import Layout from '../../../../components/layout';
-import OpenGraph from '../../../../components/OpenGraph';
+import MetaData from '../../../../components/MetaData';
 import { ArticleContent, ArticleTitleSection, BackToIndexLink } from '../../../../components/Article';
-import { SITE_URL } from '../../../../lib/constants';
 
 type Props = {
   post: PostType
@@ -28,10 +27,10 @@ const Post = ({ post }: Props) => {
 
   return (
     <Layout>
-      <OpenGraph
-        title={`${post.title} – JIGSAWYE`}
-        excerpt={post.excerpt}
-        url={`${SITE_URL}${post.slug}`}
+      <MetaData
+        title={post.title}
+        excerpt={post.excerpt.replace(/<[^>]*>/g, '')}
+        uri={post.slug}
       />
 
       <ArticleTitleSection title={post.title} date={post.date} />
@@ -74,6 +73,7 @@ export const getStaticProps: GetStaticProps<{
     'date',
     'slug',
     'content',
+    'excerpt',
   ]);
 
   return {
