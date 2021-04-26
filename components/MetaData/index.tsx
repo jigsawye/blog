@@ -12,7 +12,9 @@ const DEFAULT_TITLE = 'JIGSAWYE';
 const DEFAULT_DESCRIPTION = '個人隨筆';
 
 const MetaData: FC<MetaDataProps> = ({
-  title, uri, excerpt = DEFAULT_DESCRIPTION,
+  title,
+  uri,
+  excerpt = DEFAULT_DESCRIPTION,
 }) => (
   <Head>
     <title>{title ? `${title} · ${DEFAULT_TITLE}` : DEFAULT_TITLE}</title>

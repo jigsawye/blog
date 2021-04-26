@@ -1,3 +1,4 @@
+import { FC } from 'react';
 import styled from 'styled-components';
 
 const CopyrightWrapper = styled.div`
@@ -25,21 +26,12 @@ const CopyrightWrapper = styled.div`
   }
 `;
 
-const Copyright = () => (
+const Copyright: FC = () => (
   <CopyrightWrapper>
     <p>
-      Copyright ©
-      {' '}
-      {new Date().getFullYear()}
-      {' '}
-      <a href="https://jigsawye.com">Evan Ye</a>
-      , powered by
-      {' '}
-      <a
-        href="https://nextjs.org/"
-        rel="noopener noreferrer"
-        target="_blank"
-      >
+      Copyright © {new Date().getFullYear()}{' '}
+      <a href="https://jigsawye.com">Evan Ye</a>, powered by{' '}
+      <a href="https://nextjs.org/" rel="noopener noreferrer" target="_blank">
         Next.js
       </a>
       . All rights reserved.

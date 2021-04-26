@@ -1,8 +1,7 @@
-import { GetStaticProps } from 'next';
+import { GetStaticProps, NextPage } from 'next';
 import { getPosts } from '../lib/api';
 
 import Post from '../types/post';
-import Layout from '../components/layout';
 import formatDate from '../lib/formatDate';
 import ArchivesWrapper from '../components/Archives/ArchivesWrapper';
 import { Container, TitleSection } from '../components/common';
@@ -10,16 +9,13 @@ import { DateWrapper, TitleLink } from '../components/Article';
 import { SITE_URL } from '../lib/constants';
 import MetaData from '../components/MetaData';
 
-type ArchivesProps = {
-  Posts: Post[]
+type ArchivesPageProps = {
+  Posts: Post[];
 };
 
-const ArchivesPage = ({ Posts }: ArchivesProps) => (
-  <Layout>
-    <MetaData
-      title="ARCHIVES"
-      uri="archives"
-    />
+const ArchivesPage: NextPage<ArchivesPageProps> = ({ Posts }) => (
+  <>
+    <MetaData title="ARCHIVES" uri="archives" />
 
     <TitleSection>Archives</TitleSection>
 
@@ -31,17 +27,13 @@ const ArchivesPage = ({ Posts }: ArchivesProps) => (
         </Container>
       </ArchivesWrapper>
     ))}
-  </Layout>
+  </>
 );
 
 export default ArchivesPage;
 
 export const getStaticProps: GetStaticProps = async () => {
-  const Posts = await getPosts([
-    'title',
-    'date',
-    'slug',
-  ]);
+  const Posts = await getPosts(['title', 'date', 'slug']);
 
   return {
     props: { Posts },

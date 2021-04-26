@@ -1,3 +1,4 @@
+import { FC } from 'react';
 import styled from 'styled-components';
 import Link from 'next/link';
 
@@ -15,7 +16,7 @@ const LogoLink = styled.a`
   position: relative;
 `;
 
-const Logo = () => (
+const Logo: FC = () => (
   <LogoWrapper>
     <Link href="/" passHref>
       <LogoLink>

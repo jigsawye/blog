@@ -1,6 +1,5 @@
-import { GetStaticProps } from 'next';
+import { GetStaticProps, NextPage } from 'next';
 
-import Layout from '../components/layout';
 import { ArticleContent } from '../components/Article';
 import { Container, TitleSection } from '../components/common';
 import markdownToHtml from '../lib/markdownToHtml';
@@ -74,12 +73,9 @@ interface AboutPageProps {
   content: string;
 }
 
-const AboutPage = ({ content }: AboutPageProps) => (
-  <Layout>
-    <MetaData
-      title="ABOUT"
-      uri="about"
-    />
+const AboutPage: NextPage<AboutPageProps> = ({ content }) => (
+  <>
+    <MetaData title="ABOUT" uri="about" />
 
     <TitleSection>About</TitleSection>
 
@@ -88,7 +84,7 @@ const AboutPage = ({ content }: AboutPageProps) => (
         <div dangerouslySetInnerHTML={{ __html: content }} />
       </ArticleContent>
     </Container>
-  </Layout>
+  </>
 );
 
 export default AboutPage;

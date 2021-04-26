@@ -1,3 +1,4 @@
+import { FC } from 'react';
 import styled from 'styled-components';
 
 import { Container } from '../../common';
@@ -12,7 +13,7 @@ const HeaderWrapper = styled(Container)`
   flex-direction: row;
 `;
 
-const Header = () => (
+const Header: FC = () => (
   <HeaderWrapper>
     <Logo />
     <Nav />

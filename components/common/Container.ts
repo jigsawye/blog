@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export default styled.article`
+export default styled.div`
   max-width: 650px;
   margin: auto;
 

@@ -1,7 +1,6 @@
 import { css } from 'styled-components';
 
 export default css`
-
   body {
     font-family: 'SF Pro TC', 'SF Pro Text', 'PingFang TC', 'Helvetica Neue',
       'Helvetica', 'Arial', 'Microsoft JhengHei', wf_SegoeUI, 'Segoe UI', Segoe,

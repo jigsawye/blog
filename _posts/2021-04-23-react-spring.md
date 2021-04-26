@@ -4,9 +4,10 @@ categories:
   - tutorial
 tags:
   - javascript
+  - typescript
   - react
   - react-spring
-date: 2021-04-23 12:00:00
+date: 2021-04-26 12:00:00
 ---
 
 [react-spring](https://github.com/pmndrs/react-spring) 是我在公司的 design system 內使用兩年以上的套件，其主要提供基於 React Hooks 的 API，取代 CSS 實作動態 UI，除此之外還完整支援 TypeScript。

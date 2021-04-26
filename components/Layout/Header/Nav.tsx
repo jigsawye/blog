@@ -11,16 +11,19 @@ const NavWrapper = styled.div`
 
   a {
     border: 0;
-    font-size: 12px;
+    font-size: 14px;
     padding: 10px;
-    color: #999;
-    text-transform: uppercase;
+    color: #696969;
     text-decoration: none;
     transition: color 0.2s ease;
 
     :hover {
-      background: none;
       color: #000;
+    }
+
+    &.active {
+      color: #0070f3;
+      text-shadow: 0px 0px 1px #0070f3;
     }
   }
 `;
@@ -41,18 +44,16 @@ const NavLink: FC<NavLinkProps> = ({ to, children }) => {
   return (
     <Link href={to} passHref>
       {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-      <a>
-        {children}
-      </a>
+      <a>{children}</a>
     </Link>
   );
 };
 
-const Nav = () => (
+const Nav: FC = () => (
   <NavWrapper>
-    {menu.map(({ title, path }) => (
-      <NavLink to={path} key={title}>
-        {title}
+    {menu.map(({ title, icon, path }) => (
+      <NavLink key={path} to={path}>
+        {title ?? icon}
       </NavLink>
     ))}
   </NavWrapper>

@@ -1,10 +1,9 @@
 import Link from 'next/link';
 
-import { GetStaticProps } from 'next';
+import { GetStaticProps, NextPage } from 'next';
 import { getPosts } from '../lib/api';
 import Post from '../types/post';
 import Container from '../components/common/Container';
-import Layout from '../components/layout';
 import formatDate from '../lib/formatDate';
 import {
   ArticleContent,
@@ -15,12 +14,12 @@ import {
 } from '../components/Article';
 import MetaData from '../components/MetaData';
 
-type IndexProps = {
-  posts: Post[]
+type IndexPageProps = {
+  posts: Post[];
 };
 
-const Index = ({ posts }: IndexProps) => (
-  <Layout>
+const IndexPage: NextPage<IndexPageProps> = ({ posts }) => (
+  <>
     <MetaData />
 
     {posts.map((post) => (
@@ -43,18 +42,13 @@ const Index = ({ posts }: IndexProps) => (
         </Container>
       </ArticleWrapper>
     ))}
-  </Layout>
+  </>
 );
 
-export default Index;
+export default IndexPage;
 
 export const getStaticProps: GetStaticProps = async () => {
-  const posts = await getPosts([
-    'title',
-    'date',
-    'slug',
-    'excerpt',
-  ]);
+  const posts = await getPosts(['title', 'date', 'slug', 'excerpt']);
 
   return {
     props: { posts },

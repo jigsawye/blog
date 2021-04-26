@@ -1,20 +1,23 @@
 import { useRouter } from 'next/router';
 import ErrorPage from 'next/error';
 import Link from 'next/link';
-import { GetStaticPaths, GetStaticProps } from 'next';
+import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 import { getPostBySlug, getPosts } from '../../../../lib/api';
 import PostType from '../../../../types/post';
 import Container from '../../../../components/common/Container';
 import Disqus from '../../../../components/Disqus';
-import Layout from '../../../../components/layout';
 import MetaData from '../../../../components/MetaData';
-import { ArticleContent, ArticleTitleSection, BackToIndexLink } from '../../../../components/Article';
+import {
+  ArticleContent,
+  ArticleTitleSection,
+  BackToIndexLink,
+} from '../../../../components/Article';
 
-type Props = {
-  post: PostType
+type PostPageProps = {
+  post: PostType;
 };
 
-const Post = ({ post }: Props) => {
+const PostPage: NextPage<PostPageProps> = ({ post }) => {
   const router = useRouter();
 
   if (!router.isFallback && !post?.slug) {
@@ -26,7 +29,7 @@ const Post = ({ post }: Props) => {
   }
 
   return (
-    <Layout>
+    <>
       <MetaData
         title={post.title}
         excerpt={post.excerpt.replace(/<[^>]*>/g, '')}
@@ -39,33 +42,29 @@ const Post = ({ post }: Props) => {
         <ArticleContent dangerouslySetInnerHTML={{ __html: post.content }} />
 
         <Link href="/" passHref>
-          <BackToIndexLink>
-            ← Back to Home
-          </BackToIndexLink>
+          <BackToIndexLink>← Back to Home</BackToIndexLink>
         </Link>
       </Container>
 
-      <Disqus
-        slug={post.slug}
-        title={post.title}
-      />
-    </Layout>
+      <Disqus slug={post.slug} title={post.title} />
+    </>
   );
 };
 
-export default Post;
+export default PostPage;
 
-export const getStaticProps: GetStaticProps<{
-  post: PostType
-}, {
-  year: string;
-  month: string;
-  day: string;
-  slug: string;
-}> = async ({ params }) => {
-  const {
-    year, month, day, slug,
-  } = params ?? {};
+export const getStaticProps: GetStaticProps<
+  {
+    post: PostType;
+  },
+  {
+    year: string;
+    month: string;
+    day: string;
+    slug: string;
+  }
+> = async ({ params }) => {
+  const { year, month, day, slug } = params ?? {};
   const fullSlug = `${year}-${month}-${day}-${slug}`;
 
   const post = await getPostBySlug(fullSlug, [
@@ -90,7 +89,10 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
     return {
       params: {
-        year, month, day, slug,
+        year,
+        month,
+        day,
+        slug,
       },
     };
   });

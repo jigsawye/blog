@@ -1,3 +1,4 @@
+import { FC } from 'react';
 import styled from 'styled-components';
 
 import Copyright from './Copyright';
@@ -7,7 +8,7 @@ const FooterWrapper = styled.footer`
   border-top: 1px solid #eaeaea;
 `;
 
-const Footer = () => (
+const Footer: FC = () => (
   <FooterWrapper>
     <Copyright />
   </FooterWrapper>

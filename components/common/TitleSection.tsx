@@ -7,7 +7,7 @@ const Wrapper = styled.aside`
 `;
 
 const Title = styled.h1`
-  color: rgb(0, 0, 0);
+  color: #000;
   font-weight: 400;
   font-size: 32px;
   text-align: center;
