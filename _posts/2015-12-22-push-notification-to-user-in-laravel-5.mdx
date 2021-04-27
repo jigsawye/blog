@@ -159,12 +159,12 @@ var Redis = require('ioredis');
 var redis = new Redis();
 
 // 訂閱 redis 的 notification 頻道，也就是我們在事件中 broadcastOn 所設定的
-redis.subscribe('notification', function(err, count) {
+redis.subscribe('notification', function (err, count) {
   console.log('connect!');
 });
 
 // 當該頻道接收到訊息時就列在 terminal 上
-redis.on('message', function(channel, notification) {
+redis.on('message', function (channel, notification) {
   console.log(notification);
 });
 ```
@@ -217,7 +217,7 @@ var io = require('socket.io-client');
 var notification = io.connect('http://localhost:3000');
 
 // 當從 socket.io server 收到 notification 時將訊息印在 console 上
-notification.on('notification', function(message) {
+notification.on('notification', function (message) {
   console.log(message);
 });
 ```
@@ -225,7 +225,7 @@ notification.on('notification', function(message) {
 接著修改 `gulpfile.js`，然後執行 `gulp`，他會將編譯結果放在 `public/js/app.js`：
 
 ```js
-elixir(function(mix) {
+elixir(function (mix) {
   mix.browserify('app.js');
 });
 ```
@@ -265,11 +265,11 @@ var io = require('socket.io')(http);
 var Redis = require('ioredis');
 var redis = new Redis();
 
-redis.subscribe('notification', function(err, count) {
+redis.subscribe('notification', function (err, count) {
   console.log('connect!');
 });
 
-redis.on('message', function(channel, notification) {
+redis.on('message', function (channel, notification) {
   console.log(notification);
   notification = JSON.parse(notification);
 
@@ -278,7 +278,7 @@ redis.on('message', function(channel, notification) {
 });
 
 // 監聽 3000 port
-http.listen(3000, function() {
+http.listen(3000, function () {
   console.log('Listening on Port 3000');
 });
 ```
@@ -322,10 +322,9 @@ public function index(Request $request)
 接著修改剛剛新增在 `resources/views/home.blade.php` 的部分，將 `token` 傳至 JavaScript 中：
 
 ```html
-...
-@section('content')
+... @section('content')
 <script>
-    Notification.TOKEN = '{{ $token or null }}';
+  Notification.TOKEN = '{{ $token or null }}';
 </script>
 <script src="/js/app.js"></script>
 @endsection
@@ -339,11 +338,11 @@ var io = require('socket.io-client');
 var notification = io.connect('http://localhost:3000');
 
 // 當連接到 socket.io server 時觸發 set-token 設定使用者的 room
-notification.on('connect', function() {
+notification.on('connect', function () {
   notification.emit('set-token', Notification.TOKEN);
 });
 
-notification.on('notification', function(message) {
+notification.on('notification', function (message) {
   console.log(message);
 });
 ```
@@ -359,19 +358,19 @@ var io = require('socket.io')(http);
 var Redis = require('ioredis');
 var redis = new Redis();
 
-redis.subscribe('notification', function(err, count) {
+redis.subscribe('notification', function (err, count) {
   console.log('connect!');
 });
 
-io.on('connection', function(socket) {
+io.on('connection', function (socket) {
   // 當使用者觸發 set-token 時將他加入屬於他的 room
-  socket.on('set-token', function(token) {
+  socket.on('set-token', function (token) {
     console.log(token);
     socket.join('token:' + token);
   });
 });
 
-redis.on('message', function(channel, notification) {
+redis.on('message', function (channel, notification) {
   console.log(notification);
   notification = JSON.parse(notification);
 
@@ -383,7 +382,7 @@ redis.on('message', function(channel, notification) {
 });
 
 // 監聽 3000 port
-http.listen(3000, function() {
+http.listen(3000, function () {
   console.log('Listening on Port 3000');
 });
 ```

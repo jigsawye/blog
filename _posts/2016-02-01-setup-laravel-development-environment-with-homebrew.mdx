@@ -14,9 +14,9 @@ date: 2016-02-01 17:08:14
 
 > 更新於 2017/1/10：Laravel 官方已推出 [Laravel Valet](https://laravel.com/docs/5.3/valet)，建議採用 Valet 方式進行安裝。
 
->建議你熟悉 Terminal 的操作再參考本篇，否則容易把系統環境搞亂。
+> 建議你熟悉 Terminal 的操作再參考本篇，否則容易把系統環境搞亂。
 
-在開發 Laravel Application 時，新手可能使用 *AMP 的系統環境整合包，而大多數人會選擇官方所提供的 [Homestead](https://laravel.tw/docs/5.2/homestead)。但 Homestead 其實就是一包很大包的虛擬機再配上 Vargrant，曾幾何時我也是使用 Homestead，但是因為我的小 Macbook Air 實在是受不了虛擬機容量一大包，又吃一堆記憶體。
+在開發 Laravel Application 時，新手可能使用 \*AMP 的系統環境整合包，而大多數人會選擇官方所提供的 [Homestead](https://laravel.tw/docs/5.2/homestead)。但 Homestead 其實就是一包很大包的虛擬機再配上 Vargrant，曾幾何時我也是使用 Homestead，但是因為我的小 Macbook Air 實在是受不了虛擬機容量一大包，又吃一堆記憶體。
 
 雖然標題是寫 Laravel，但是要應用在其他的 PHP Application 也是可行的。本篇就以 Homebrew 為主軸，打造 Laravel 的開發環境。
 
@@ -32,7 +32,7 @@ date: 2016-02-01 17:08:14
 
 ###### PHP-CLI
 
-Laravel 是目前在 PHP 中最熱門的 Framework，其實除了透過 *AMP 指向 `public` 資料夾及使用 Homestead 外，Laravel 也提供了 command line 的方式啟動 development server。
+Laravel 是目前在 PHP 中最熱門的 Framework，其實除了透過 \*AMP 指向 `public` 資料夾及使用 Homestead 外，Laravel 也提供了 command line 的方式啟動 development server。
 
 ```bash
 $ php artisan serve
@@ -54,6 +54,7 @@ Laravel development server started on http://localhost:8000/
 ###### 總結
 
 所以我們必須透過 Homebrew 安裝這些東西：
+
 - php
 - mariadb
 - redis
@@ -91,7 +92,7 @@ Homebrew 的使用方式很簡單，以下介紹幾個常用指令：
 $ brew search php
 ```
 
-你應該會看到非常多的 php，像是 `homebrew/php/php53`、`homebrew/php/php54`⋯⋯一直到最新的 `homebrew/php/php70`。而 php 7.0 有相容舊版本，所以我是使用 php 7.0 開發，所以我們來搜尋一下 php 7.0：
+你應該會看到非常多的 php，像是 `homebrew/php/php53`、`homebrew/php/php54`⋯⋯ 一直到最新的 `homebrew/php/php70`。而 php 7.0 有相容舊版本，所以我是使用 php 7.0 開發，所以我們來搜尋一下 php 7.0：
 
 ```bash
 $ brew search php70
@@ -152,6 +153,7 @@ Press Ctrl-C to quit.
 $ brew search mariadb
 $ brew install mariadb
 ```
+
 #####使用
 
 安裝完成後，Homebrew 會提示你可以使用以下指令開啟 MySQL：
@@ -181,7 +183,7 @@ $ brew install redis
 
 同樣的，Homebrew 提示使用以下指令開啟 Redis：
 
-```bash
+````bash
 $ redis-server /usr/local/etc/redis.conf
 5725:M 01 Feb 15:53:36.291 * Increased maximum number of open files to 10032 (it was originally set to 2560).
                 _._
@@ -205,7 +207,7 @@ $ redis-server /usr/local/etc/redis.conf
 5725:M 01 Feb 15:53:36.293 # Server started, Redis version 3.0.7
 5725:M 01 Feb 15:53:36.293 * DB loaded from disk: 0.000 seconds
 5725:M 01 Feb 15:53:36.293 * The server is now ready to accept connections on port 6379
-```
+````
 
 不過你會發現，Redis 會佔用一個 terminal，相當不便。
 
@@ -227,7 +229,7 @@ $ brew tap homebrew/services
 $ mysql.server stop
 Shutting down MySQL
 ... SUCCESS!
-````
+```
 
 #####使用
 
@@ -388,4 +390,4 @@ Zend Engine v3.0.0, Copyright (c) 1998-2015 Zend Technologies
 
 ### Done！
 
-到此就完成囉，其實安裝起來不會很困難，操作起來也很簡單。相比 *AMP 與 Homestead，使用的資源及容量也輕巧很多。希望本篇可以提供給操作 terminal 一段時間的人做參考，畢竟自幹環境比起一鍵安裝包安心多了 XD，想裝就裝，想砍就砍！
+到此就完成囉，其實安裝起來不會很困難，操作起來也很簡單。相比 \*AMP 與 Homestead，使用的資源及容量也輕巧很多。希望本篇可以提供給操作 terminal 一段時間的人做參考，畢竟自幹環境比起一鍵安裝包安心多了 XD，想裝就裝，想砍就砍！

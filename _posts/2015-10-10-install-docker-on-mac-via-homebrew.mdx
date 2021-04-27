@@ -8,7 +8,7 @@ tags:
   - terminal
 ---
 
->更新於 2017/1/10：Docker 官方已推出 [Docker for Mac](https://docs.docker.com/docker-for-mac/)，若有需求請前往該站參考，本安裝方式已不適用。
+> 更新於 2017/1/10：Docker 官方已推出 [Docker for Mac](https://docs.docker.com/docker-for-mac/)，若有需求請前往該站參考，本安裝方式已不適用。
 
 > 本文建議了解 unix-like 基礎指令及 Docker 基本操作者閱讀。
 
@@ -22,11 +22,13 @@ tags:
 ###### 安裝 docker 及 docker-machine
 
 首先更新 `homebrew`：
+
 ```bash
 ❯ brew update
 ```
 
 接著先安裝 `docker` 及 `docker-machine`：
+
 ```bash
 ❯ brew install docker docker-machine
 ```
@@ -34,11 +36,13 @@ tags:
 ###### 啟動 docker-machine
 
 我們要透過 `docker-machine` 建立並啟動一個 VM 作為 docker 的環境，這邊我使用的 driver 為 VirtualBox，名字設定為 default：
+
 ```bash
 ❯ docker-machine create --driver virtualbox default
 ```
 
 接下來為重點，我們執行 `docker-machine env default`，可以查看 `default` 所設定的參數，而這些參數用於指定 `docker` 的 client 所要連線的參數：
+
 ```bash
 ❯ docker-machine env default
 export DOCKER_TLS_VERIFY="1"
@@ -56,6 +60,7 @@ export DOCKER_MACHINE_NAME="default"
 ```
 
 不過這樣的話每次開新的 terminal 都要執行一次，所以你可以把這行指令新增到你的 `~/.bashrc`（or `~/.zshrc` etc）：
+
 ```bash .zshrc
 ...
 # configure the shell

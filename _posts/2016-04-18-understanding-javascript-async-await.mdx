@@ -9,6 +9,7 @@ tags:
   - nodejs
 date: 2016-04-18 19:33:55
 ---
+
 最近在做一個自己的 [API boilerplate](https://github.com/jigsawye/koa2-boilerplate)，選用了 [koa](https://github.com/koajs/koa) 這個 library。而其中除了 stable 的 `1.x` 外，它還 release `2.x`！有什麼不同呢？`1.x` 是用 generator 來實作，而到了 `2.x` 竟然是用 Async/Await！身為一個熱血碼農，怎能錯過這個進場 Async/Await 的大好機會 XD。
 
 <!-- more -->
@@ -23,21 +24,22 @@ date: 2016-04-18 19:33:55
 
 ```js
 const posts = [
-  { title: 'Post 1', content: 'fake content'},
-  { title: 'Post 2', content: 'fake content'},
+  { title: 'Post 1', content: 'fake content' },
+  { title: 'Post 2', content: 'fake content' },
 ];
 
-const getPosts = () => new Promise(resolve => setTimeout(() => resolve(posts), 1000));
+const getPosts = () =>
+  new Promise((resolve) => setTimeout(() => resolve(posts), 1000));
 ```
 
 我習慣寫 ES2015 的 arrow function，如果看不習慣的話，在一般 function 會像下面這樣：
 
 ```js
 function getPosts() {
-  return new Promise(function(resolve) {
-    setTimeout(function() {
+  return new Promise(function (resolve) {
+    setTimeout(function () {
       resolve(posts);
-    } , 3000);
+    }, 3000);
   });
 }
 ```
@@ -49,7 +51,8 @@ function getPosts() {
 在 Promise 的做法中，我們就會這樣來實作取得 posts 的程式：
 
 ```js
-const printPostsToConsole = () => getPosts().then(posts => console.log(posts));
+const printPostsToConsole = () =>
+  getPosts().then((posts) => console.log(posts));
 
 printPostsToConsole();
 ```
@@ -57,9 +60,10 @@ printPostsToConsole();
 除此之外還會加上 error handler：
 
 ```js
-const printPostsToConsole = () => getPosts()
-  .then(posts => console.log(posts))
-  .catch(err => console.log(err));
+const printPostsToConsole = () =>
+  getPosts()
+    .then((posts) => console.log(posts))
+    .catch((err) => console.log(err));
 
 printPostsToConsole();
 ```
@@ -87,7 +91,7 @@ printPostsToConsole();
 async function printPostsToConsole() {
   const posts = await getPosts();
   console.log(posts);
-};
+}
 
 printPostsToConsole();
 ```
@@ -101,7 +105,7 @@ const printPostsToConsole = async () => {
   try {
     const posts = await getPosts();
     console.log(posts);
-  } catch(err) {
+  } catch (err) {
     console.log(err);
   }
 };

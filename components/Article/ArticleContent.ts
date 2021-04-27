@@ -3,7 +3,7 @@ import styled from 'styled-components';
 const ArticleContent = styled.div`
   font-weight: 400;
   font-size: 14px;
-  line-height: 24px;
+  line-height: 1.8;
 
   p {
     margin-bottom: 20px;

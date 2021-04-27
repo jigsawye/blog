@@ -2,6 +2,9 @@ import { useRouter } from 'next/router';
 import ErrorPage from 'next/error';
 import Link from 'next/link';
 import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
+import hydrate from 'next-mdx-remote/hydrate';
+
+import renderToString from 'next-mdx-remote/render-to-string';
 import { getPostBySlug, getPosts } from '../../../../lib/api';
 import PostType from '../../../../types/post';
 import Container from '../../../../components/common/Container';
@@ -12,6 +15,7 @@ import {
   ArticleTitleSection,
   BackToIndexLink,
 } from '../../../../components/Article';
+import CodeBlock from '../../../../components/CodeBlock';
 
 type PostPageProps = {
   post: PostType;
@@ -32,14 +36,20 @@ const PostPage: NextPage<PostPageProps> = ({ post }) => {
     <>
       <MetaData
         title={post.title}
-        excerpt={post.excerpt.replace(/<[^>]*>/g, '')}
+        excerpt={post.excerpt.renderedOutput.replace(/<[^>]*>/g, '')}
         uri={post.slug}
       />
 
       <ArticleTitleSection title={post.title} date={post.date} />
 
       <Container>
-        <ArticleContent dangerouslySetInnerHTML={{ __html: post.content }} />
+        <ArticleContent>
+          {hydrate(post.content, {
+            components: {
+              code: CodeBlock,
+            },
+          })}
+        </ArticleContent>
 
         <Link href="/" passHref>
           <BackToIndexLink>← Back to Home</BackToIndexLink>
@@ -75,9 +85,15 @@ export const getStaticProps: GetStaticProps<
     'excerpt',
   ]);
 
+  const formattedPost = {
+    ...post,
+    content: await renderToString(post.content),
+    excerpt: await renderToString(post.excerpt),
+  };
+
   return {
     props: {
-      post: post as PostType,
+      post: formattedPost,
     },
   };
 };

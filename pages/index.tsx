@@ -1,6 +1,8 @@
 import Link from 'next/link';
-
+import hydrate from 'next-mdx-remote/hydrate';
+import renderToString from 'next-mdx-remote/render-to-string';
 import { GetStaticProps, NextPage } from 'next';
+
 import { getPosts } from '../lib/api';
 import Post from '../types/post';
 import Container from '../components/common/Container';
@@ -30,11 +32,7 @@ const IndexPage: NextPage<IndexPageProps> = ({ posts }) => (
           </Link>
           <DateWrapper>{formatDate(post.date)}</DateWrapper>
 
-          <ArticleContent
-            dangerouslySetInnerHTML={{
-              __html: post.excerpt,
-            }}
-          />
+          <ArticleContent>{hydrate(post.excerpt)}</ArticleContent>
 
           <Link href={`/${post.slug}`} passHref>
             <ReadMoreLink>Read More →</ReadMoreLink>
@@ -50,7 +48,21 @@ export default IndexPage;
 export const getStaticProps: GetStaticProps = async () => {
   const posts = await getPosts(['title', 'date', 'slug', 'excerpt']);
 
+  let formattedPosts: Partial<Post>[] = [];
+
+  // eslint-disable-next-line no-restricted-syntax
+  for (const post of posts) {
+    formattedPosts = [
+      ...formattedPosts,
+      {
+        ...post,
+        // eslint-disable-next-line no-await-in-loop
+        excerpt: await renderToString(post.excerpt),
+      },
+    ];
+  }
+
   return {
-    props: { posts },
+    props: { posts: formattedPosts },
   };
 };

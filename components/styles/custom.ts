@@ -9,17 +9,19 @@ export default css`
       'Droid Sans Fallback', 'AR PL UMing TW', Roboto, 'Helvetica Neue',
       'Hiragino Maru Gothic ProN', メイリオ, 'ヒラギノ丸ゴ ProN W4', Meiryo,
       'Droid Sans', sans-serif;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
   }
 
   ::selection {
-    background-color: #79ffe1;
-    color: #000;
+    background-color: #0070f3;
+    color: #fff;
   }
 
   code,
   pre {
     font-family: Menlo, Monaco, Consolas, 'Courier New', 'Roboto Mono',
-      monospace;
+      monospace !important;
   }
 `;
