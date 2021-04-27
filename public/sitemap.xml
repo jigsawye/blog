@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:mobile="http://www.google.com/schemas/sitemap-mobile/1.0" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
+<url><loc>https://jigsawye.com</loc><changefreq>daily</changefreq><priority>0.7</priority><lastmod>2021-04-27T10:19:16.585Z</lastmod></url>
+<url><loc>https://jigsawye.com/about</loc><changefreq>daily</changefreq><priority>0.7</priority><lastmod>2021-04-27T10:19:16.585Z</lastmod></url>
+<url><loc>https://jigsawye.com/archives</loc><changefreq>daily</changefreq><priority>0.7</priority><lastmod>2021-04-27T10:19:16.585Z</lastmod></url>
+<url><loc>https://jigsawye.com/2021/04/23/react-spring</loc><changefreq>daily</changefreq><priority>0.7</priority><lastmod>2021-04-27T10:19:16.585Z</lastmod></url>
+<url><loc>https://jigsawye.com/2018/11/30/advanced-react-memo</loc><changefreq>daily</changefreq><priority>0.7</priority><lastmod>2021-04-27T10:19:16.585Z</lastmod></url>
+<url><loc>https://jigsawye.com/2018/07/22/getting-started-apollo-server</loc><changefreq>daily</changefreq><priority>0.7</priority><lastmod>2021-04-27T10:19:16.585Z</lastmod></url>
+<url><loc>https://jigsawye.com/2017/09/04/make-good-use-of-lodash</loc><changefreq>daily</changefreq><priority>0.7</priority><lastmod>2021-04-27T10:19:16.585Z</lastmod></url>
+<url><loc>https://jigsawye.com/2017/08/30/vuex-module-namespacing</loc><changefreq>daily</changefreq><priority>0.7</priority><lastmod>2021-04-27T10:19:16.585Z</lastmod></url>
+<url><loc>https://jigsawye.com/2016/06/21/install-fish-shell-on-os-x</loc><changefreq>daily</changefreq><priority>0.7</priority><lastmod>2021-04-27T10:19:16.585Z</lastmod></url>
+<url><loc>https://jigsawye.com/2016/04/18/understanding-javascript-async-await</loc><changefreq>daily</changefreq><priority>0.7</priority><lastmod>2021-04-27T10:19:16.585Z</lastmod></url>
+<url><loc>https://jigsawye.com/2016/02/01/setup-laravel-development-environment-with-homebrew</loc><changefreq>daily</changefreq><priority>0.7</priority><lastmod>2021-04-27T10:19:16.585Z</lastmod></url>
+<url><loc>https://jigsawye.com/2015/12/22/push-notification-to-user-in-laravel-5</loc><changefreq>daily</changefreq><priority>0.7</priority><lastmod>2021-04-27T10:19:16.585Z</lastmod></url>
+<url><loc>https://jigsawye.com/2015/12/06/ptt-in-osx-terminal</loc><changefreq>daily</changefreq><priority>0.7</priority><lastmod>2021-04-27T10:19:16.585Z</lastmod></url>
+<url><loc>https://jigsawye.com/2015/12/06/prevent-ssh-disconnect</loc><changefreq>daily</changefreq><priority>0.7</priority><lastmod>2021-04-27T10:19:16.585Z</lastmod></url>
+<url><loc>https://jigsawye.com/2015/11/30/running-react-native-on-device</loc><changefreq>daily</changefreq><priority>0.7</priority><lastmod>2021-04-27T10:19:16.585Z</lastmod></url>
+<url><loc>https://jigsawye.com/2015/11/29/instruction-with-redux</loc><changefreq>daily</changefreq><priority>0.7</priority><lastmod>2021-04-27T10:19:16.585Z</lastmod></url>
+<url><loc>https://jigsawye.com/2015/11/23/enable-emmet-for-jsx-in-sublime</loc><changefreq>daily</changefreq><priority>0.7</priority><lastmod>2021-04-27T10:19:16.585Z</lastmod></url>
+<url><loc>https://jigsawye.com/2015/10/10/install-docker-on-mac-via-homebrew</loc><changefreq>daily</changefreq><priority>0.7</priority><lastmod>2021-04-27T10:19:16.585Z</lastmod></url>
+<url><loc>https://jigsawye.com/2015/10/07/jsdc-2015-day-2</loc><changefreq>daily</changefreq><priority>0.7</priority><lastmod>2021-04-27T10:19:16.585Z</lastmod></url>
+<url><loc>https://jigsawye.com/2015/10/06/javascript-object-assign</loc><changefreq>daily</changefreq><priority>0.7</priority><lastmod>2021-04-27T10:19:16.585Z</lastmod></url>
+<url><loc>https://jigsawye.com/2015/10/05/jsdc-2015-day-1</loc><changefreq>daily</changefreq><priority>0.7</priority><lastmod>2021-04-27T10:19:16.585Z</lastmod></url>
+<url><loc>https://jigsawye.com/2015/09/25/gitlab-ce-in-docker</loc><changefreq>daily</changefreq><priority>0.7</priority><lastmod>2021-04-27T10:19:16.585Z</lastmod></url>
+<url><loc>https://jigsawye.com/2015/07/23/use-route-model-binding-in-laravel</loc><changefreq>daily</changefreq><priority>0.7</priority><lastmod>2021-04-27T10:19:16.585Z</lastmod></url>
+<url><loc>https://jigsawye.com/2015/06/22/using-pjax-with-laravel-5</loc><changefreq>daily</changefreq><priority>0.7</priority><lastmod>2021-04-27T10:19:16.585Z</lastmod></url>
+</urlset>
