@@ -42,7 +42,7 @@ export const ReadMoreLink = styled.a`
 
   &:hover {
     color: #0070f3;
-    background: rgba(0,118,255,0.1);
+    background: rgba(0, 118, 255, 0.1);
   }
 `;
 
@@ -65,11 +65,11 @@ export const BackToIndexLink = styled.a`
   border: none;
   font-size: inherit;
   line-height: inherit;
-  transition: background 0.2s ease,color 0.2s ease,box-shadow 0.2s ease;
+  transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
   outline: none;
 
   &:hover {
-    background: rgba(0,118,255,0.9);
+    background: rgba(0, 118, 255, 0.9);
     box-shadow: 0 6px 20px rgb(0 118 255 / 23%);
   }
 

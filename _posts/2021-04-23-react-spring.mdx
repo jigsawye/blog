@@ -101,7 +101,7 @@ react-spring 中最基本的 API 就是 useSpring，用於數值間的 transitio
 
 useSpring 常見的使用情境例如﹔一個可以打開／收合的 Collapse 元件、enable／disable 時會改變 toggle 位置的 Switch 元件。
 
-<code url="https://codesandbox.io/embed/github/pmndrs/react-spring/tree/master/demo/src/sandboxes/animating-auto?fontsize=14&hidenavigation=1&theme=dark" />
+<code url="https://codesandbox.io/embed/github/pmndrs/react-spring/tree/master/demo/src/sandboxes/animating-auto?fontsize=14&hidenavigation=1&theme=dark&view=preview" />
 
 > 官方範例。更多的 API 使用方式及範例可參考官方文件的 [useSpring](https://react-spring.io/hooks/use-spring) 章節
 
@@ -118,7 +118,7 @@ const springs = useSprings(
 return springs.map((styles) => <animated.div style={styles} />);
 ```
 
-<code url="https://codesandbox.io/embed/github/pmndrs/react-spring/tree/master/demo/src/sandboxes/draggable-list?fontsize=14&hidenavigation=1&theme=dark" />
+<code url="https://codesandbox.io/embed/github/pmndrs/react-spring/tree/master/demo/src/sandboxes/draggable-list?fontsize=14&hidenavigation=1&theme=dark&view=preview" />
 
 > 官方範例。更多的 API 使用方式及範例可參考官方文件的 [useSpring](https://react-spring.io/hooks/use-springs) 章節
 
@@ -162,7 +162,7 @@ useTransition 應該是最常用的 hooks，用於實作單一元件或列表 mo
 };
 ```
 
-<code url="https://codesandbox.io/embed/github/pmndrs/react-spring/tree/master/demo/src/sandboxes/simple-transition?fontsize=14&hidenavigation=1&theme=dark" />
+<code url="https://codesandbox.io/embed/github/pmndrs/react-spring/tree/master/demo/src/sandboxes/simple-transition?fontsize=14&hidenavigation=1&theme=dark&view=preview" />
 
 > 官方範例。更多的 API 使用方式及範例可參考官方文件的 [useTransition](https://react-spring.io/hooks/use-transition) 章節。
 
@@ -176,7 +176,7 @@ const trail = useTrail(amount, { opacity: 1 });
 return trail.map((styles) => <animated.div style={styles} />);
 ```
 
-<code url="https://codesandbox.io/embed/github/pmndrs/react-spring/tree/master/demo/src/sandboxes/trail?fontsize=14&hidenavigation=1&theme=dark" />
+<code url="https://codesandbox.io/embed/github/pmndrs/react-spring/tree/master/demo/src/sandboxes/trail?fontsize=14&hidenavigation=1&theme=dark&view=preview" />
 
 > 官方範例。更多的 API 使用方式及範例可參考官方文件的 [useTrial](https://react-spring.io/hooks/use-trail) 章節。
 
@@ -206,7 +206,7 @@ return (
 
 > 這邊要注意在 v9 以前的 ref 使用的是 react 的 `useRef`，v9 之後需要使用 react-spring 提供的 `useSpringRef`。
 
-<code url="https://codesandbox.io/embed/github/pmndrs/react-spring/tree/master/demo/src/sandboxes/chain?fontsize=14&hidenavigation=1&theme=dark" />
+<code url="https://codesandbox.io/embed/github/pmndrs/react-spring/tree/master/demo/src/sandboxes/chain?fontsize=14&hidenavigation=1&theme=dark&view=preview" />
 
 > 官方範例。更多的 API 使用方式及範例可參考官方文件的 [useChain](https://react-spring.io/hooks/use-chain) 章節。
 
@@ -224,7 +224,7 @@ useSpring({ ..., config: config.stiff });
 
 不同 preset 造就的效果也不同，像範例的 stiff 就是較緊湊的動畫模式，更多 preset 可以參觀官方文件的 [Presets](https://react-spring.io/common/configs#presets)。
 
-<code url="https://codesandbox.io/embed/react-spring-preset-configs-kdv7r?fontsize=14&hidenavigation=1&theme=dark" />
+<code url="https://codesandbox.io/embed/react-spring-preset-configs-kdv7r?fontsize=14&hidenavigation=1&theme=dark&view=preview" />
 
 而除了預先提供的 preset 外，也可以手動調整 config 內的各種不同參數，以下就介紹幾個比較常調整的參數：
 
@@ -236,7 +236,7 @@ useSpring({ ..., config: config.stiff });
 
 除此之外也支援傳統 CSS 動畫的曲線函數及時間，更多的參數可以參考官方文件的 [Config](https://react-spring.io/common/configs#configs)。
 
-<code url="https://codesandbox.io/embed/react-spring-config-x1vjb?fontsize=14&hidenavigation=1&theme=dark" />
+<code url="https://codesandbox.io/embed/react-spring-config-x1vjb?fontsize=14&hidenavigation=1&theme=dark&view=preview" />
 
 ## a11y & testing
 

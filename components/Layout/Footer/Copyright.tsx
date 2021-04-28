@@ -5,7 +5,7 @@ const CopyrightWrapper = styled.div`
   display: flex;
   vertical-align: top;
   justify-content: center;
-  padding: 40px 0;
+  padding: 40px 10px;
   margin: auto;
 
   p {

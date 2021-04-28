@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export default styled.div`
-  max-width: 650px;
+  max-width: 800px;
   margin: auto;
 
   @media (max-width: 730px) {

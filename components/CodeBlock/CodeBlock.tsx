@@ -15,7 +15,7 @@ const LivePreviewWrapper = styled.div`
 
 const LiveEditorWrapper = styled.div`
   font-family: Menlo, Monaco, Consolas, 'Courier New', 'Roboto Mono', monospace !important;
-  font-size: 13px;
+  font-size: 14px;
   border-radius: 8px;
   overflow: auto;
 

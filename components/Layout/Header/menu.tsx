@@ -17,7 +17,7 @@ export default [
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 17 16"
         fill="none"
-        style={{ width: 20, height: 20 }}
+        style={{ width: 24, height: 24 }}
       >
         <g clipPath="url(githublogo)">
           <path

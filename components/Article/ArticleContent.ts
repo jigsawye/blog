@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 const ArticleContent = styled.div`
   font-weight: 400;
-  font-size: 14px;
+  font-size: 1em;
   line-height: 1.8;
 
   p {
@@ -20,29 +20,12 @@ const ArticleContent = styled.div`
     }
   }
 
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    font-weight: bold;
-    margin-top: 40px;
-  }
-
-  h1 {
-    font-size: 32px;
-  }
-
   h2 {
-    font-size: 24px;
+    margin-top: 2.5rem;
   }
 
-  h3,
-  h4,
-  h5,
-  h6 {
-    font-size: 18px;
+  h3 {
+    margin-top: 2rem;
   }
 
   strong {
@@ -56,14 +39,13 @@ const ArticleContent = styled.div`
   }
 
   ul {
-    list-style-type: none;
-    margin-left: 15px;
-    padding: 0px;
+    list-style: none;
+    margin-bottom: 32px;
 
     li {
-      font-size: 14px;
+      font-size: 1em;
       line-height: 24px;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
 
       ul {
         margin-top: 10px;
@@ -71,10 +53,10 @@ const ArticleContent = styled.div`
 
       :before {
         content: '-';
-        display: inline-block;
-        color: rgb(153, 153, 153);
+        display: block;
+        color: #6d6d6d;
         position: absolute;
-        margin-left: -15px;
+        margin-left: -25px;
       }
     }
   }
@@ -88,8 +70,8 @@ const ArticleContent = styled.div`
 
   code[class*='language-text'],
   code:not([class*='language-']) {
-    color: rgb(189, 16, 224);
-    font-size: 0.9em;
+    color: rgb(212, 0, 255);
+    font-size: 14px;
     white-space: pre-wrap;
 
     :before {

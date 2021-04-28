@@ -6,17 +6,22 @@ import { Container } from '../../common';
 import Logo from './Logo';
 import Nav from './Nav';
 
-const HeaderWrapper = styled(Container)`
-  margin: auto;
-  position: relative;
-  display: flex;
-  flex-direction: row;
+const HeaderWrapper = styled.header`
+  > div {
+    margin: auto;
+    position: relative;
+    display: flex;
+  }
+
+  border-bottom: 1px solid rgb(234, 234, 234);
 `;
 
 const Header: FC = () => (
   <HeaderWrapper>
-    <Logo />
-    <Nav />
+    <Container>
+      <Logo />
+      <Nav />
+    </Container>
   </HeaderWrapper>
 );
 
