@@ -65,7 +65,7 @@ react-spring 中最基本的 API 就是 useSpring，用於數值間的 transitio
 };
 ```
 
-當按下該 div 後就會將 width 從 80px transition 到 240px，children 也會顯示對應的數值。
+當按下該 div 後就會將 width 從 40px transition 到 240px，children 也會顯示對應的數值。
 
 特別要注意的是，所有 react-spring 給的 props 都是 [SpringValue](https://react-spring.io/classes/spring-value)，若要讓其作為 style 使用，就要放到 react-spring 提供的 `animated.x` 元件。
 
@@ -75,7 +75,7 @@ react-spring 中最基本的 API 就是 useSpring，用於數值間的 transitio
 () => {
   const [open, setOpen] = useState(false);
   const props = useSpring({
-    transform: open ? 'translateX(200px)' : 'translateX(0px)',
+    transform: open ? 'translateX(100px)' : 'translateX(0px)',
   });
 
   return (
@@ -84,7 +84,7 @@ react-spring 中最基本的 API 就是 useSpring，用於數值間的 transitio
         lineHeight: '40px',
         textAlign: 'center',
         height: 40,
-        width: 150,
+        width: 60,
         backgroundColor: 'azure',
         border: '1px solid darkslategrey',
         borderRadius: 8,
@@ -93,7 +93,7 @@ react-spring 中最基本的 API 就是 useSpring，用於數值間的 transitio
       }}
       onClick={() => setOpen((prev) => !prev)}
     >
-      Transform Div
+      Item
     </animated.div>
   );
 };
