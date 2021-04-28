@@ -1,0 +1,310 @@
+---
+title: 在 React 前端自動產生 GraphQL operation 的 type 達到更好的開發體驗
+categories:
+  - tutorial
+tags:
+  - javascript
+  - typescript
+  - react
+  - graphql
+  - apollo-client
+date: 2021-04-28 18:00:00
+---
+
+GraphQL 眾所皆知的就是會基於 schema 的定義自動產生文件，確保不會有開發者自寫文件，導致人為的失誤問題。但是在前端使用時還是必須手動標記 type，才能準確知道 response 的 type，而不是面對一個 `any` type 的 data object。
+
+以 `apollo-client` 為例，透過 useQuery 的 generic 傳入定義的 data 及 variable type 後，就可以在開發時準確知道 data 的 type，也能檢查傳入的參數是否正確︰
+
+<!-- more -->
+
+```tsx
+interface Post {
+  id: number;
+  title: string;
+  content: string;
+}
+
+interface PostData {
+  post: Post;
+}
+
+interface PostVars {
+  postId: number;
+}
+
+const GET_POST = gql`
+  query GetPost($postId: Int!) {
+    post(postId: $postId) {
+      id
+      title
+      content
+    }
+  }
+`;
+
+const PostPage = () => {
+  const { loading, data, error } = useQuery<PostData, PostVars>(GET_POST, {
+    variables: {
+      postId: 1,
+    },
+  });
+
+  if (loading) {
+    return <p>Loading...</p>;
+  }
+
+  if (!data || error) {
+    return <p>Error :(</p>;
+  }
+
+  // with type
+  return (
+    <div>
+      <p>Title {data.post.title}</p>
+      <p>Title {data.post.content}</p>
+    </div>
+  );
+};
+```
+
+但是這部分是基於開發者的自行標記，未來 API 有任何改變，勢必得在回頭修正這些 type，加入了人為的因素，產生失誤的可能性就會大大提升。
+
+現在 `server side api` <-> `api docs` <-> `client side types` 之間，前半段已經由 GraphQL 自動化處理了，那麼後半段呢？假設我們可以讓這三者間都透過自動化解決呢？是不是就能有效提升開發效率，降低失誤的可能性？
+
+### Code generator
+
+如果是使用 apollo-client 的話，官方有提供一套基礎的 [apollo-codegen](https://www.apollographql.com/docs/react/development-testing/developer-tooling/#apollo-codegen) 可用，但今天我想介紹的是另一套功能更強大的 [graphql-code-generator](https://www.graphql-code-generator.com/)。
+
+`graphql-codegen` 除了 apollo client 以外也有完整的 plugin 提供，以支援各種不同實作的，像是前端也可以支援 flow type 或 reason，也支援 Vue Apollo 或 Urql，語言也不局限於 TypeScript，可以支援 Java、.Net 等等。
+
+### Plugins
+
+graphql-codegen 有龐大的 plugins 作為支撐，讓開發者應用到各個不同的情況。以下就舉幾個在 Apollo ecosystem 的常用 plugin 做參考︰
+
+- `typescript`︰產生 schema 的 type definition，也是最基礎的套件之一
+- `typescript-operations`︰產生 client 的 type，諸如 query／mutation／subscription 及 fragment。
+- `typescript-resolvers`︰產生 schema 內定義於 server 的 resolver type。
+- `typescript-react-apollo`︰產生 apollo-client 的 hooks，像是 useQuery／useMutation 等等。
+- `fragment-matcher`︰用於 schema 有定義 union type 時，產生 fragment matcher 給 client 使用。
+- `typescript-apollo-client-helpers`﹔用於產生 apollo client v3 所使用的 type policies type。
+
+更多的 plugin 可以參考官方的 [All Plugins](https://www.graphql-code-generator.com/docs/plugins/index)
+
+### Config
+
+要使用 graphql-codegen 時，除了安裝以外，我們必須有一個 config file 以設定在專案內要如何產生 type
+
+```bash
+yarn graphql-codegen --config ./path/to/config.yml
+```
+
+一個設定檔通常會長得像這樣，完整的選項可以參考[官方文件](https://www.graphql-code-generator.com/docs/getting-started/codegen-config#available-options)。
+
+```yaml
+schema: http://localhost:3000/graphql
+generates:
+  ./src/types.ts:
+    plugins:
+      - typescript
+```
+
+以上述 config 為例，會產生一個 `types.ts` 在 src 資料夾，裡面會包含從 `http://localhost:3000/graphql` 取得的 schema type。
+
+### Gen files
+
+回到今天的主題，除了產生 schema 的 type 外，我們怎麼在前端產生舉凡 useQuery、useMutation 等等的 type 呢？接著讓我們一步一步來
+
+假設我們的 schema 目前是長這樣：
+
+```graphql
+type Query {
+  post(postId: String!): Post
+}
+
+type Post {
+  id: ID!
+  title: String!
+  content: String!
+}
+```
+
+按照上一章節的 config 產生出來的 type 就會是這樣：
+
+```typescript
+// src/types.ts
+
+export type Maybe<T> = T | null;
+
+/** All built-in and custom scalars, mapped to their actual values */
+export type Scalars = {
+  ID: string;
+  String: string;
+  Boolean: boolean;
+  Int: number;
+  Float: number;
+};
+
+export type Query = {
+  __typename?: 'Query';
+  post?: Maybe<Post>;
+};
+
+export type QueryPostArgs = {
+  postId: Scalars['String'];
+};
+
+export type Post = {
+  __typename?: 'Post';
+  id: Scalars['ID'];
+  title: Scalars['String'];
+  content: Scalars['String'];
+};
+```
+
+基本上產生以上 type 之後已經可以自行手動標記 type 了，不過為了開發便利及避免失誤，我們可以進一步調整 config，讓 codegen 自行產生對應的 operation type：
+
+```yaml
+schema: http://localhost:3000/graphql
+generates:
+  ./src/types.ts:
+    plugins:
+      - typescript
+  ./src:
+    preset: near-operation-file
+    presetConfig:
+      extension: .generated.ts
+      baseTypesPath: ./src/types.ts
+    documents:
+      - './src/**/*.graphql.ts'
+    plugins:
+      - typescript-operations
+      - typescript-react-apollo
+```
+
+這邊要特別介紹的就是 `preset`，藉由它可以讓 codegen 以不同的方式去進行 generate 的行為。我們會期望 operation 是跟著 component 走的，所以透過 `near-operation-file` 可以在指定的檔案類型在同目錄產生另一個 generated files。
+
+以上述 config 為例，如果有一個檔案名稱為 `PostPage.graphql.ts` 就會產生對應的 `PostPage.graphql.generated.ts`。更多的使用方式可以參考[官方文件](https://www.graphql-code-generator.com/docs/presets/near-operation-file)。
+
+plugins 使用的則是在上面章節有介紹過的兩個 plugin，分別是產生 operation type 及產生 useQuery 等等的 hooks function。
+
+接著我們假設建立好了好使用的 query operation：
+
+```typescript
+// src/PostPage.graphql.ts
+
+export const GetPostQuery = gql`
+  query GetPost($postId: String!) {
+    post(id: $postId) {
+      id
+      title
+      content
+    }
+  }
+`;
+```
+
+執行 codegen 後就會產生對應的 `.generated.ts` 檔案：
+
+```tsx
+// src/PostPage.graphql.generated.ts
+
+import * as Types from './types';
+import * as Operations from './PostPage.graphql';
+import * as Apollo from '@apollo/client';
+const defaultOptions = {};
+
+export type GetPostQueryVariables = Exact<{
+  postId: Scalars['String'];
+}>;
+
+export type GetPostQuery = { __typename?: 'Query' } & {
+  post?: Maybe<
+    { __typename?: 'Post' } & Pick<Types.Post, 'id', 'title', 'content'>
+  >;
+};
+
+/**
+ * __useGetPostQuery__
+ *
+ * To run a query within a React component, call `useGetPostQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPostQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPostQuery({
+ *   variables: {
+ *      postId: // value for 'postId'
+ *   },
+ * });
+ */
+export function useGetPostQuery(
+  baseOptions: Apollo.QueryHookOptions<GetPostQuery, GetPostQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetPostQuery, GetPostQueryVariables>(
+    GetPostDocument,
+    options
+  );
+}
+export function useGetPostLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetPostQuery, GetPostQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetPostQuery, GetPostQueryVariables>(
+    GetPostDocument,
+    options
+  );
+}
+export type GetPostQueryHookResult = ReturnType<typeof useGetPostQuery>;
+export type GetPostLazyQueryHookResult = ReturnType<typeof useGetPostLazyQuery>;
+export type GetPostQueryResult = Apollo.QueryResult<
+  GetPostQuery,
+  GetPostQueryVariables
+>;
+```
+
+產生的檔案也很貼心的幫你寫上的範例，接著只要在元件內按照範例寫上：
+
+```typescript
+// src/PostPage.tsx
+
+import { useGetPostQuery } from './PostPage.graphql.generated.ts';
+
+const PostPage = () => {
+  const { loading, data, error } = useGetPostQuery({
+    variables: {
+      postId: 1,
+    },
+  });
+
+  if (loading) {
+    return <p>Loading...</p>;
+  }
+
+  if (!data || error) {
+    return <p>Error :(</p>;
+  }
+
+  // with type
+  return (
+    <div>
+      <p>Title {data.post.title}</p>
+      <p>Title {data.post.content}</p>
+    </div>
+  );
+};
+```
+
+### 一些小技巧
+
+- eslint 或 prettier 等等的檢查工具可以跳過 generated files
+- 使用 eslint-plugin-graphql 檢查前端使用的 operation 是否正確
+- 使用 lint-staged 套件檢查 schema 是否有改變，自動進行 codegen
+
+### 結語
+
+本文為求展示簡化了很多的功能，像是可以產生 component 的 fragment type，用來檢查 component 的 props，或是幫 scalars 的 type 進行額外更精確的定義，也可以調整 global config 決定 build 出來的 type name 形式，更多的用法可以參考[官方文件](https://www.graphql-code-generator.com/docs/getting-started/index)。
+
+透過使用 `graphql-codegen` 產生的強型別 operation type 及 hooks，大幅度地避免了人為的失誤，準確知道 response type，有效提升開發效率跟程式碼品質。歡迎各位使用看看，有任何想法或意見也不吝指教！
