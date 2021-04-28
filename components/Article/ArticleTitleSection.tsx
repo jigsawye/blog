@@ -14,7 +14,7 @@ const Wrapper = styled.aside`
 const Title = styled.h1`
   color: rgb(0, 0, 0);
   font-weight: 400;
-  font-size: 28px;
+  font-size: 32px;
   max-width: 650px;
   text-align: center;
   padding-left: 20px;

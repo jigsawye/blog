@@ -27,8 +27,22 @@ const ArticleContent = styled.div`
   h5,
   h6 {
     font-weight: bold;
-    font-size: 18px;
     margin-top: 40px;
+  }
+
+  h1 {
+    font-size: 32px;
+  }
+
+  h2 {
+    font-size: 24px;
+  }
+
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-size: 18px;
   }
 
   strong {

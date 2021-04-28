@@ -15,7 +15,7 @@ type ArchivesPageProps = {
 
 const ArchivesPage: NextPage<ArchivesPageProps> = ({ Posts }) => (
   <>
-    <MetaData title="ARCHIVES" uri="archives" />
+    <MetaData title="Archives" uri="archives" />
 
     <TitleSection>Archives</TitleSection>
 
