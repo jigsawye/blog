@@ -17,9 +17,9 @@ date: 2017-08-30 12:00:00
 
 > 以下範例均來自於[官方文件](https://vuex.vuejs.org/en/modules.html)並依據本文加以修改、調整與翻譯
 
-#### State
+### State
 
-##### 基礎介紹
+#### 基礎介紹
 
 因為官方的文件中都有講解跟範例了，所以 mutation 跟 action 及 getters 的作用就不多提了，以下就大概提一下 state 的部分。
 
@@ -38,7 +38,7 @@ const store = new Vuex.Store({
 });
 ```
 
-##### 實際情況
+#### 實際情況
 
 不過在一般專案開發不可能只有一兩個變數而已，所以會切分成好幾個 `module`，大致如下：
 
@@ -107,9 +107,9 @@ const store = new Vuex.Store({
 })
 ```
 
-#### Vuex namespacing
+### Vuex namespacing
 
-##### namespaced: true
+#### namespaced: true
 
 Vuex 在 `2.1.0` 版時在 `module` 中加入了 `namespaced` 的選項，透過啟用這個選項，Vuex 會自動幫你在 module 的 actions / mutations / getters 加上 namespace 的 prefix：
 
@@ -161,7 +161,7 @@ const store = new Vuex.Store({
 })
 ```
 
-##### How the namespecing do?
+### How the namespecing do?
 
 這邊稍微講一下 Vuex 的 namespacing 做了哪些事情：
 
@@ -249,11 +249,11 @@ modules: {
 }
 ```
 
-#### Helpers
+### Helpers
 
 以下就講解一下 Vuex 的 helpers 在遇到 namespaced 的用法
 
-##### mapState
+#### mapState
 
 ```js
 computed: {
@@ -283,7 +283,7 @@ computed: {
 },
 ```
 
-##### mapActions
+#### mapActions
 
 ```js
 methods: {
@@ -308,11 +308,11 @@ methods: {
 }
 ```
 
-##### mapGetters
+#### mapGetters
 
 與 `mapActions` 用法相同
 
-##### createNamespacedHelpers
+#### createNamespacedHelpers
 
 `2.4.0` 加入的新 helper
 

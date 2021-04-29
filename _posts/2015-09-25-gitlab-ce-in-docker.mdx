@@ -24,13 +24,13 @@ tags:
 
 以自行架設私有的版本控制環境來說，Gitlab 肯定是首選（因為我不知道還有哪些版控可以自己架），很久以前曾經自己在 ubuntu 上用官方提供的一鍵安裝包裝過一次，用過這種懶人包的都知道，裝的時候完全不知道發生什麼事，尤其當時還很菜。那時是成功架起來沒錯，不過完全不知道發生了什麼事。
 
-###### 環境
+#### 環境
 
 我是直接用了學長架的 OpenStack 叢集開一個 instance 當建置環境，基本上要照這份筆記安裝 Gitlab CE，應該只要隨便一個有裝 Docker 的 unix-like 系統都可以。
 
 ![Imgur](https://i.imgur.com/sCxpbLf.png)
 
-###### 安裝
+#### 安裝
 
 透過 Docker 安裝 Gitlab CE 很簡單，只要在 [Docker Hub](https://hub.docker.com) 上找 gitlab 就可以找到很多的 images，我選了 star 最多的 [sameersbn/gitlab](https://hub.docker.com/r/sameersbn/gitlab/) ，基本上只要照 image 的文件做就可以了。
 
@@ -75,7 +75,7 @@ docker run --name gitlab -d \
     sameersbn/gitlab:8.0.2
 ```
 
-###### 完成！
+#### 完成！
 
 ![Imgur](https://i.imgur.com/nzIAG0F.png)
 
@@ -90,7 +90,7 @@ docker run --name gitlab -d \
 
 以下以簡單的 Node.js project 為例，做一次完整的 CI Flow：
 
-###### 建立 repository
+#### 建立 repository
 
 首先在 Gitlab 上建立一個 `ci-flow` 的 repository：
 
@@ -104,7 +104,7 @@ docker run --name gitlab -d \
 
 ![Imgur](https://i.imgur.com/i1kpNnD.png)
 
-###### gitlab-runner
+#### gitlab-runner
 
 什麼是 `gitlab-runner` 呢？簡單來說就是透過這個 runner 去執行 CI 所要執行的工作。例如我以 docker 做測試環境，runner 會建立預先設定好 image 的 container，CI 被觸發時會自動 start 該 container，並把 repository pull 至 container 內，接著執行指定的動作。在這部分我們要安裝及設定 `gitlab-runner`，並註冊讓它執行。
 
@@ -157,7 +157,7 @@ INFO[0045] Runner registered successfully. Feel free to start it, but if it's ru
 
 ![Imgur](https://i.imgur.com/N2dSh45.png)
 
-###### 建立 project
+#### 建立 project
 
 建立一個 project，並使用 `npm init`（enter 到底就可以了）產生 `package.json`，接著安裝 node.js 的測試工具 `mocha`：
 
@@ -198,7 +198,7 @@ $ ./node_modules/mocha/bin/mocha
 
 測試成功！接著我們來設定 CI 所要使用的 image 及執行的 script。
 
-###### .gitlab-ci.yml
+#### .gitlab-ci.yml
 
 重點來了，我們要在專案的根目錄建立 `.gitlab-ci.yml` 的檔案，用於決定 Gitlab CI 要如何對專案 build、test、deploy...等等，類似於 Travis CI 的 `.travis.yml`。詳細的可用選項可以參考[官方文件](http://doc.gitlab.com/ci/yaml/README.html)，這邊以我的例子做解說：
 `before_script` 是執行 job 前會執行的 script，我在這邊設定安裝 node 的 dependencies，也就是 `mocha` 這個 test tool。`stages` 為設定有幾種工作階段，一般可能就會有 `build`、`test`、`deploy`，並按照順序逐一執行對應的 job，我這邊單獨以 `test` 做例子。接著制定第一個 job，對應的就是 `test` 這個 stage，在 `script` 增加執行 project 內的 `mocha` 做測試，並指在 `master` 這個 branch，最後加上一個 `node-4.1.1` 的 tag 去啟動對應 tag 為 `node-4.1.1` 的 `gitlab-runner`，因為一般在測試時可能會針對多個不同版本的環境做測試，所以會使用 tag 這個功能來做設定。
@@ -242,7 +242,7 @@ git push -u origin master
 
 最後等待 CI 自動執行測試！
 
-###### 執行結果
+#### 執行結果
 
 Push 至 Repository 後可以在 CI 的 Dashboard 看見剛剛的 commit 已經 pending 了：
 
@@ -260,7 +260,7 @@ Push 至 Repository 後可以在 CI 的 Dashboard 看見剛剛的 commit 已經 
 
 ![Imgur](https://i.imgur.com/h3B39rH.png)
 
-###### Slack Integration
+#### Slack Integration
 
 Gitlab CI 也有提供 Slack 的整合，提供即時的 CI 狀態，只要填入 Webhook 即可：
 

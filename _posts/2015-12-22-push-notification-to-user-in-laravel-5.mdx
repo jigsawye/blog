@@ -169,7 +169,7 @@ redis.on('message', function (channel, notification) {
 });
 ```
 
-###### 測試與 Laravel 是否正確串接
+#### 測試與 Laravel 是否正確串接
 
 首先你必須先確認這些東西有沒有執行：
 
@@ -200,7 +200,7 @@ event(new App\Events\PushNotification(App\User::first(), 'banana!'))
 
 ### 連接前端與 socket.io
 
-###### 前端
+#### 前端
 
 首先我們必須先安裝 `socket.io-client`，這是 socket.io 在前端所使用的套件，我們會透過 server side 的開發方式，再透過 elixir 的 browserify 轉成前端可執行的 JavaScript。
 
@@ -254,7 +254,7 @@ elixir(function (mix) {
 @endsection
 ```
 
-###### 後端
+#### 後端
 
 修改剛剛的 `socket.js`，增加 socket.io 及推送通知至前端的程式碼：
 
@@ -295,7 +295,7 @@ http.listen(3000, function () {
 
 ![Imgur](https://i.imgur.com/MgYnVql.png)
 
-###### 前端
+#### 前端
 
 我們要做的事情有：
 
@@ -347,7 +347,7 @@ notification.on('notification', function (message) {
 });
 ```
 
-###### 後端
+#### 後端
 
 修改 `socket.js`，讓使用者加入屬於他的 room，並由 Laravel 廣播事件資訊內的 token 決定要傳給哪個使用者（room）：
 

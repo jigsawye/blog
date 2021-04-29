@@ -30,7 +30,7 @@ date: 2016-02-01 17:08:14
 
 在開始之前，先說說開發 Laravel 需要哪些需求？
 
-###### PHP-CLI
+#### PHP-CLI
 
 Laravel 是目前在 PHP 中最熱門的 Framework，其實除了透過 \*AMP 指向 `public` 資料夾及使用 Homestead 外，Laravel 也提供了 command line 的方式啟動 development server。
 
@@ -43,15 +43,15 @@ Laravel development server started on http://localhost:8000/
 
 > PHP-CLI 為 PHP Command Line Interface，也就是 Command Line 的 PHP 執行環境。
 
-###### MariaDB
+#### MariaDB
 
 沒錯，開發一個 Web Application 一定需要資料庫，而我平常是使用 MariaDB，所以我們也必須安裝 MariaDB。
 
-###### Redis
+#### Redis
 
 而我平常在開發的時候，會把 Cache、Session、及 Queue 的 Driver 都設定為 Redis，所以我們會安裝 Redis。
 
-###### 總結
+#### 總結
 
 所以我們必須透過 Homebrew 安裝這些東西：
 
@@ -61,7 +61,7 @@ Laravel development server started on http://localhost:8000/
 
 ### Getting started
 
-###### Homebrew
+#### Homebrew
 
 #####安裝
 開始之前，當然必須先安裝 [Homebrew](http://brew.sh/index_zh-tw.html)，官方網站已有提供指令進行安裝，打開 terminal 並輸入即可：
@@ -83,7 +83,7 @@ Homebrew 的使用方式很簡單，以下介紹幾個常用指令：
 
 更多指令可以輸入 `brew help`，或參考[官方的 FAQ](https://github.com/Homebrew/homebrew/blob/master/share/doc/homebrew/FAQ.md)。
 
-###### PHP
+#### PHP
 
 #####安裝
 當然，我們首先必須安裝 PHP，我們先執行以下指令尋找 php：
@@ -143,7 +143,7 @@ Press Ctrl-C to quit.
 
 其中 `localhost:8000` 的部分是指你要開在哪個 Host，後面的 public 則是選擇你 `indxe.php` 的目錄，也就是 Application 進入點。
 
-###### MariaDB
+#### MariaDB
 
 #####安裝
 
@@ -170,7 +170,7 @@ Starting MySQL
 $ mysql -uroot
 ```
 
-###### Redis
+#### Redis
 
 #####安裝
 
@@ -211,7 +211,7 @@ $ redis-server /usr/local/etc/redis.conf
 
 不過你會發現，Redis 會佔用一個 terminal，相當不便。
 
-###### Homebrew Services
+#### Homebrew Services
 
 相信有些人可能會發現，在啟動 MariaDB 及 Redis 時，指令有些微的不同，沒有一個統一管理這些 services 的工具，像是 ubuntu 的 `service <servicename> start`。雖然 Homebrew 有提供 `launchctl` 來管理，不過操作起來實在是太麻煩了。其實 Homebrew 額外有提供一個 services 的管理工具，透過這個工具就可以統一管理所有的 services。
 
@@ -267,7 +267,7 @@ redis   started jigsawye /Users/jigsawye/Library/LaunchAgents/homebrew.mxcl.redi
 
 ### 額外補充
 
-###### 多版本 PHP 切換
+#### 多版本 PHP 切換
 
 在一些專案可能需不同的 PHP 版本來執行，以下就說明如何接換多版本的 PHP。
 
@@ -320,7 +320,7 @@ Copyright (c) 1997-2015 The PHP Group
 Zend Engine v3.0.0, Copyright (c) 1998-2015 Zend Technologies
 ```
 
-###### PHP extenstions
+#### PHP extenstions
 
 有時你可能需要安裝 PHP 的 extenstions，像是為了產生 PHPUnit 的 coverage report 就必須安裝 Xdebug，為了提升執行速度則裝 OPCache。
 

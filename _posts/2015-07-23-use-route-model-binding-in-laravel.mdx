@@ -11,7 +11,7 @@ tags:
 
 > 本文適用於 Laravel 5.0 以上版本。
 
-#### 什麼是 Route Model Binding？
+### 什麼是 Route Model Binding？
 
 > Laravel model binding provides a convenient way to inject class instances into your routes. For example, instead of injecting a user's ID, you can inject the entire User class instance that matches the given ID.
 > [Reference](http://laravel.com/docs/5.0/routing#route-model-binding)
@@ -57,9 +57,9 @@ public function show(Article $article)
 
 對於我這種超懶的開發者很受用，少寫一行算一行，幫助開發更快速。
 
-#### 設定 Route Model Binding
+### 設定 Route Model Binding
 
-##### 綁定 Model
+#### 綁定 Model
 
 一般來說都會將綁定設定在 `RouteServiceProvider`（App/Provider/RouteServiceProvider.php）中，在這裡我用上述的範例做綁定：
 
@@ -83,7 +83,7 @@ public function show(Article $article)
 
 也就是說，如果 Request 是 `/articles/7`，那麼 `$article` 就會是 `Article::findOrFail(7)`，若該筆資料不存在則會拋出 404。
 
-#### 綁定做了什麼？
+### 綁定做了什麼？
 
 那麼 `bind` 做了什麼事呢？讓我們看一下 Route list：
 
@@ -104,7 +104,7 @@ public function show(Article $article)
 
 注意到有 `{articles}` 的 Route，這邊的變數 `articles` 也就是我們在 `bind()`傳入的第一個參數，Route Model Binding 會自動在你綁定的 Model（第二個參數 `\App\Article`） 搜尋（`findOrFail`）主鍵為 `{articles}` 的資料。所以不只在 `show` method，只要任何有 `{articles}` 的 Route 都會自動做綁定，相當的方便（懶人）。
 
-#### 自定搜尋條件
+### 自定搜尋條件
 
 有些情況並不適用於預設的 `Model::findOrFail($id)`，例如只希望找出已經發佈的 Article，這時候可以改變 `bind()` 的第二個參數為包含自訂搜尋的條件的 Closure：
 
