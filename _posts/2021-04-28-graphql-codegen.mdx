@@ -205,7 +205,7 @@ export const GetPostQuery = gql`
 
 執行 codegen 後就會產生對應的 `.generated.ts` 檔案：
 
-```tsx
+```typescript
 // src/PostPage.graphql.generated.ts
 
 import * as Types from './types';
@@ -267,13 +267,13 @@ export type GetPostQueryResult = Apollo.QueryResult<
 
 產生的檔案也很貼心的幫你寫上的範例，接著只要在元件內按照範例寫上：
 
-```typescript
+```tsx
 // src/PostPage.tsx
 
 import { useGetPostQuery } from './PostPage.graphql.generated.ts';
 
 const PostPage = () => {
-  const { loading, data, error } = useGetPostQuery({
+  const { data, loading, error } = useGetPostQuery({
     variables: {
       postId: 1,
     },
@@ -307,4 +307,4 @@ const PostPage = () => {
 
 本文為求展示簡化了很多的功能，像是可以產生 component 的 fragment type，用來檢查 component 的 props，或是幫 scalars 的 type 進行額外更精確的定義，也可以調整 global config 決定 build 出來的 type name 形式，更多的用法可以參考[官方文件](https://www.graphql-code-generator.com/docs/getting-started/index)。
 
-透過使用 `graphql-codegen` 產生的強型別 operation type 及 hooks，大幅度地避免了人為的失誤，準確知道 response type，有效提升開發效率跟程式碼品質。歡迎各位使用看看，有任何想法或意見也不吝指教！
+透過使用 `graphql-codegen` 產生的強型別 operation type 及 hooks，大幅度地避免了人為的失誤，準確知道 response type，有效提升開發效率跟程式碼品質。歡迎各位使用看看，有任何想法或意見也請不吝指教！
