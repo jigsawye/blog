@@ -43,7 +43,7 @@ date: 2015-11-29 11:23:33
 - 管理 counter 的 reducer 接收到 action 後將 state 中目前的數字 + 1
 - state tree 及 reducers 由 store 集中管理，並由 React 取用
 
-###### Action
+#### Action
 
 就以剛剛的 Todo 為例，actions 基本上就只是一個 JavaScript 物件，只需要定義好這個 action 的 type（類型）即可，當這個 action 被 dispatch 時，這個物件就會被傳至 reudcer，所以若有資料需要傳入，只需要加在這個 action 物件中：
 
@@ -59,7 +59,7 @@ date: 2015-11-29 11:23:33
 const INCREMENT = 'INCREMENT';
 ```
 
-###### Reducer
+#### Reducer
 
 reducer 則是一個 function，負責接收被 dispatch 的 action 並處理 state，要注意的是需傳入兩個參數到這個 function，第一個是目前的 state，第二個則是我們定義的 action 物件：
 
@@ -85,7 +85,7 @@ function counter(state = 0, action) {
 
 還記得在 action 定義的 type 吧？我們會在 reducer 中根據 action 物件中的 type 去對應要執行的動作，接著回傳處理完的 state。
 
-###### Store
+#### Store
 
 我們現在知道了定義的 action 及處理 state 的 reducer，最後我們則需要透過 redux 的 `createStore` 將 reducer 轉換成 store：
 

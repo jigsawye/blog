@@ -63,7 +63,7 @@ Laravel development server started on http://localhost:8000/
 
 #### Homebrew
 
-#####安裝
+##### 安裝
 開始之前，當然必須先安裝 [Homebrew](http://brew.sh/index_zh-tw.html)，官方網站已有提供指令進行安裝，打開 terminal 並輸入即可：
 
 ```bash
@@ -73,7 +73,7 @@ Laravel development server started on http://localhost:8000/
 
 > 此指令會透過 curl 下載官方安裝檔，並透過 ruby 執行。他會在你的電腦安裝 homebrew。
 
-#####使用
+##### 使用
 
 Homebrew 的使用方式很簡單，以下介紹幾個常用指令：
 
@@ -85,7 +85,7 @@ Homebrew 的使用方式很簡單，以下介紹幾個常用指令：
 
 #### PHP
 
-#####安裝
+##### 安裝
 當然，我們首先必須安裝 PHP，我們先執行以下指令尋找 php：
 
 ```bash
@@ -104,7 +104,7 @@ $ brew search php70
 $ brew install php70
 ```
 
-#####使用
+##### 使用
 
 安裝完後，執行以下指令看看是否有安裝完成：
 
@@ -145,7 +145,7 @@ Press Ctrl-C to quit.
 
 #### MariaDB
 
-#####安裝
+##### 安裝
 
 安裝方式一樣，先搜尋再安裝：
 
@@ -154,7 +154,7 @@ $ brew search mariadb
 $ brew install mariadb
 ```
 
-#####使用
+##### 使用
 
 安裝完成後，Homebrew 會提示你可以使用以下指令開啟 MySQL：
 
@@ -172,14 +172,14 @@ $ mysql -uroot
 
 #### Redis
 
-#####安裝
+##### 安裝
 
 ```bash
 $ brew search redis
 $ brew install redis
 ```
 
-#####使用
+##### 使用
 
 同樣的，Homebrew 提示使用以下指令開啟 Redis：
 
@@ -215,7 +215,7 @@ $ redis-server /usr/local/etc/redis.conf
 
 相信有些人可能會發現，在啟動 MariaDB 及 Redis 時，指令有些微的不同，沒有一個統一管理這些 services 的工具，像是 ubuntu 的 `service <servicename> start`。雖然 Homebrew 有提供 `launchctl` 來管理，不過操作起來實在是太麻煩了。其實 Homebrew 額外有提供一個 services 的管理工具，透過這個工具就可以統一管理所有的 services。
 
-#####安裝
+##### 安裝
 
 執行以下指令安裝：
 
@@ -231,7 +231,7 @@ Shutting down MySQL
 ... SUCCESS!
 ```
 
-#####使用
+##### 使用
 
 使用以下指令可以查看目前所安裝的 services：
 
@@ -271,7 +271,7 @@ redis   started jigsawye /Users/jigsawye/Library/LaunchAgents/homebrew.mxcl.redi
 
 在一些專案可能需不同的 PHP 版本來執行，以下就說明如何接換多版本的 PHP。
 
-#####安裝其他版本的 PHP
+##### 安裝其他版本的 PHP
 
 像前面說明的一樣，我們可以直接安裝其他版本的 PHP：
 
@@ -305,7 +305,7 @@ Copyright (c) 1997-2015 The PHP Group
 Zend Engine v2.6.0, Copyright (c) 1998-2015 Zend Technologies
 ```
 
-#####切換回 PHP 7.0
+##### 切換回 PHP 7.0
 
 若要切換回去也相當簡單，`unlink` PHP 5.6 再 `link` PHP 7.0 即可：
 
@@ -324,7 +324,7 @@ Zend Engine v3.0.0, Copyright (c) 1998-2015 Zend Technologies
 
 有時你可能需要安裝 PHP 的 extenstions，像是為了產生 PHPUnit 的 coverage report 就必須安裝 Xdebug，為了提升執行速度則裝 OPCache。
 
-#####安裝 extenstions
+##### 安裝 extenstions
 
 所有的 PHP extenstions 都是以 `phpXX-*` 來命名，也就是說如果你現在使用 PHP 7.0，那麼就會是 `php70-*`。讓我們來搜尋 PHP 7.0 有哪些 extenstions 可以安裝：
 
@@ -357,7 +357,7 @@ Zend Engine v3.0.0, Copyright (c) 1998-2015 Zend Technologies
     with Xdebug v2.4.0RC3, Copyright (c) 2002-2015, by Derick Rethans
 ```
 
-#####關閉 extenstions
+##### 關閉 extenstions
 
 所有的 extenstions 啟用檔案都會存放在 `/usr/local/etc/php/X.X/conf.d/ext-*.ini`，以剛剛安裝的 Xdebug 為例，他的檔案會存放在 `/usr/local/etc/php/7.0/conf.d/ext-xdebug.ini`。若要關閉該 extenstions，用編輯器編輯他即可：
 

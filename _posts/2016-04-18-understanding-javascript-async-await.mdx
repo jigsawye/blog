@@ -14,11 +14,11 @@ date: 2016-04-18 19:33:55
 
 <!-- more -->
 
-#### 說說 Promise
+### 說說 Promise
 
 在很久以前，那是個 JavaScript callback hell 的年代，為了處理這種處境，有人提出了 Promise 的寫法。而 Promise 也是近年開發 JavaScript 程式不可或缺的一門基礎，在 ES2015 也將 Promise 納為其中的一項標準。
 
-##### 非同步 function
+#### 非同步 function
 
 關於非同步的文章網路上已經很多了，就不在此贅述。在這裡我直接先以 Promise 實作一個簡易的非同步程式：
 
@@ -46,7 +46,7 @@ function getPosts() {
 
 這支程式會回傳一個 Promise，而模擬在 1 秒後 resolve 一個模擬的 `posts`。
 
-##### 呼叫一個非同步 function
+#### 呼叫一個非同步 function
 
 在 Promise 的做法中，我們就會這樣來實作取得 posts 的程式：
 
@@ -68,11 +68,11 @@ const printPostsToConsole = () =>
 printPostsToConsole();
 ```
 
-#### 如果是 Async/Await？
+### 如果是 Async/Await？
 
 Async/Await 被規範在 ES2016 的標準中，很多的討論都指向 Async/Await 會是非同步的終極解決方案。
 
-##### 用 Async/Await 處理非同步 function
+#### 用 Async/Await 處理非同步 function
 
 換成 Async/Await 的話，就不必寫下 `.then()` 了！就像同步的程式一般，不必理會它是否為非同步。
 
@@ -111,9 +111,9 @@ const printPostsToConsole = async () => {
 };
 ```
 
-#### 現在就開始用 Async/Await！
+### 現在就開始用 Async/Await！
 
-##### 在前端
+#### 在前端
 
 如何在現在的環境實作 Async/Await 呢？其實如果有在寫 Front-end（尤其是 React），基本上應該已經使用了 [babel](babeljs.io)。如果要使用 Async/Await，presets 除了原本的 `es2015` 外，只要加上 `stage-3`：
 
@@ -132,7 +132,7 @@ const printPostsToConsole = async () => {
 }
 ```
 
-##### 在後端
+#### 在後端
 
 在 backend 的情況則比較不同，雖然一樣要透過 babel，不過請裝 [es2015-node4](babel-preset-es2015-node4) 或是 [es2015-node5](https://github.com/alekseykulikov/babel-preset-es2015-node5)（根據你的 node 版本做選擇），其餘則跟前端一樣。
 
@@ -149,7 +149,7 @@ require('../app.js');
 
 關於詳細的設定可以參考我的 [koa2-boilerplate](https://github.com/jigsawye/koa2-boilerplate)
 
-#### 後記
+### 後記
 
 緊接在 ES2015 之後的 ES2016 也增加了不少的新 feature，除了 Async/Await 也有 [object-rest-spread](https://github.com/sebmarkbage/ecmascript-rest-spread)、[class-constructor-call](https://github.com/tc39/ecma262/blob/master/workingdocs/callconstructor.md)、[class-properties](https://github.com/jeffmo/es-class-fields-and-static-properties)等等。
 
