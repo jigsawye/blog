@@ -10,7 +10,7 @@ import MetaData from '../components/MetaData';
 
 const about = `
 - **<a href="https://www.cakeresume.com/s--3qgnC7TqWdPBhxH-FvJl_g--/jigsawye" target="_blank">線上履歷</a>**
-- **[PDF 履歷下載](https://www.cakeresume.com/pdf/s--sGK0K8kJTME4WgCZb3DdUA--/MLgpx.pdf)**
+- **[PDF 履歷下載](https://www.cakeresume.com/pdf/s--I0iaXf4MZ8vlfttiVsVK0w--/ZOLQL.pdf)**
 
 ## 自介
 
