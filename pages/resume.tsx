@@ -53,7 +53,11 @@ interface ResumePageProps {
 
 const ResumePage: NextPage<ResumePageProps> = ({ content }) => (
   <>
-    <MetaData title="[求職] 資深前端工程師" uri="resume" />
+    <MetaData
+      title="[求職] 資深前端工程師"
+      excerpt={content.renderedOutput.replace(/<[^>]*>/g, '')}
+      uri="resume"
+    />
 
     <TitleSection>[求職] 資深前端工程師</TitleSection>
 
