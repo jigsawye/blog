@@ -16,12 +16,12 @@ const Head: FC = () => (
 
     <link rel="icon" href="/favicon.png" />
 
-    <link
+    {/* <link
       rel="search"
       type="application/opensearchdescription+xml"
       href="/rss.xml"
       title="JIGSAWYE"
-    />
+    /> */}
   </NextHead>
 );
 
