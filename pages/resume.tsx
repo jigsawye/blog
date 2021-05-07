@@ -10,7 +10,7 @@ import MetaData from '../components/MetaData';
 
 const about = `
 - **<a href="https://www.cakeresume.com/s--3qgnC7TqWdPBhxH-FvJl_g--/jigsawye" target="_blank">線上履歷</a>**
-- **[PDF 履歷下載](https://www.cakeresume.com/pdf/s--I0iaXf4MZ8vlfttiVsVK0w--/ZOLQL.pdf)**
+- **[PDF 履歷下載](https://www.cakeresume.com/pdf/s--6yyfOilz8jZ-1DwCAZt0AQ--/DYoAJ.pdf)**
 
 ## 自介
 
@@ -39,7 +39,7 @@ const about = `
 
 ## 其他
 
-英語的聽、說能力不佳，即時溝通有困難，期望就職環境以中文溝通。
+英語的聽、說能力有待加強，期望就職環境先以中文溝通為主。
 
 ## 聯絡方式
 
