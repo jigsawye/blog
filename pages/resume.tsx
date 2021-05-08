@@ -11,6 +11,7 @@ import MetaData from '../components/MetaData';
 const about = `
 - **<a href="https://www.cakeresume.com/s--3qgnC7TqWdPBhxH-FvJl_g--/jigsawye" target="_blank">線上履歷</a>**
 - **[PDF 履歷下載](https://www.cakeresume.com/pdf/s--6yyfOilz8jZ-1DwCAZt0AQ--/DYoAJ.pdf)**
+- **[Resume in English](https://raw.githubusercontent.com/jigsawye/blog/master/resume/resume-evan-ye.pdf)**
 
 ## 自介
 
