@@ -1,47 +1,64 @@
-import fs from 'fs'
-import { join } from 'path'
-import matter from 'gray-matter'
-import PostType from '../types/post'
+import fs from 'fs';
+import { join } from 'path';
+import matter from 'gray-matter';
+import renderToString from 'next-mdx-remote/render-to-string';
 
-const postsDirectory = join(process.cwd(), '_posts')
+import { MdxRemote } from 'next-mdx-remote/types';
+import { PostType } from '../types';
 
-export function getPostSlugs() {
-  return fs.readdirSync(postsDirectory)
+const postsDirectory = join(process.cwd(), '_posts');
+
+export function getPostSlugs(): string[] {
+  return fs.readdirSync(postsDirectory);
 }
 
-export const getPostBySlug = async <K extends keyof PostType>(slug: string, fields: K[] = []): Promise<Record<K, string>> => {
+export const getPostBySlug = async <K extends keyof PostType>(
+  slug: string,
+  fields: K[] = []
+): Promise<Pick<PostType, K>> => {
   const realSlug = slug.replace(/\.mdx$/, '');
   const fullPath = join(postsDirectory, `${realSlug}.mdx`);
-  const fileContents = fs.readFileSync(fullPath, 'utf8')
-  const { data, content } = matter(fileContents)
+  const fileContents = fs.readFileSync(fullPath, 'utf8');
+  const { data, content } = matter(fileContents);
 
-  const items: Partial<Record<K, string>> = {}
+  const post: Record<string, string | MdxRemote.Source> = {};
 
   // Ensure only the minimal needed data is exposed
-  for (let field of fields) {
+  // eslint-disable-next-line no-restricted-syntax
+  for (const field of fields) {
     if (field === 'slug') {
-      items[field] = realSlug.replace(/([0-9]+)-([0-9]+)-([0-9]+)-(.+)/g, '$1/$2/$3/$4');
+      post.slug = realSlug.replace(
+        /([0-9]+)-([0-9]+)-([0-9]+)-(.+)/g,
+        '$1/$2/$3/$4'
+      );
     } else if (field === 'content') {
-      items[field] = content;
+      // eslint-disable-next-line no-await-in-loop
+      post.content = await renderToString(content);
     } else if (field === 'excerpt') {
-      items[field] = content.split('<!-- more -->')[0];
-    }else if (field === 'date') {
-      items[field] = new Date(data[field]).toISOString()
+      // eslint-disable-next-line no-await-in-loop
+      post.excerpt = await renderToString(content.split('<!-- more -->')[0]);
+    } else if (field === 'date') {
+      post.date = new Date(data[field]).toISOString();
     } else if (data[field]) {
-      items[field] = data[field]
+      post[field] = data[field];
     }
   }
 
-  return items as Record<K, string>
-}
+  return post as Pick<PostType, K>;
+};
 
-export const getPosts = async <K extends keyof PostType>(fields: K[] = []) => {
-  const slugs = getPostSlugs()
+export const getPosts = async <K extends keyof PostType>(
+  fields: K[] = []
+): Promise<Pick<PostType, 'date' | K>[]> => {
+  const slugs = getPostSlugs();
 
-  const posts = (await Promise.all(slugs
-    .map((slug) => getPostBySlug(slug, [...fields, 'date']))))
+  const posts = (
+    await Promise.all(
+      slugs.map((slug) => getPostBySlug(slug, [...fields, 'date']))
+    )
+  )
     // sort posts by date in descending order
-    .sort((a, b) => (a.date > b.date ? -1 : 1))
+    .sort((a, b) => (a.date > b.date ? -1 : 1));
 
-  return posts
-}
+  return posts;
+};

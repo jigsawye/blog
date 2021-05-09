@@ -4,7 +4,7 @@ import zhHant from 'javascript-time-ago/locale/zh-Hant';
 TimeAgo.addLocale(zhHant);
 const timeAgo = new TimeAgo('zh-Hant');
 
-const formatDate = (date: string) => {
+const formatDate = (date: string): string => {
   const d = new Date(date);
   d.setTime(d.getTime() + d.getTimezoneOffset() * 60 * 1000);
 

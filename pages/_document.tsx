@@ -40,7 +40,7 @@ export default class MyDocument extends Document {
 
   render(): JSX.Element {
     return (
-      <Html>
+      <Html lang="zh-TW">
         <Head>
           {process.env.NODE_ENV === 'production' && (
             <>
@@ -50,15 +50,16 @@ export default class MyDocument extends Document {
                 src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`}
               />
               <script
+                // eslint-disable-next-line react/no-danger
                 dangerouslySetInnerHTML={{
                   __html: `
-                window.dataLayer = window.dataLayer || [];
-                function gtag(){dataLayer.push(arguments);}
-                gtag('js', new Date());
-                gtag('config', '${GA_TRACKING_ID}', {
-                  page_path: window.location.pathname,
-                });
-              `,
+                    window.dataLayer = window.dataLayer || [];
+                    function gtag(){dataLayer.push(arguments);}
+                    gtag('js', new Date());
+                    gtag('config', '${GA_TRACKING_ID}', {
+                      page_path: window.location.pathname,
+                    });
+                  `,
                 }}
               />
             </>

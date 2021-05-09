@@ -11,9 +11,17 @@ const MyApp: NextPage<AppProps> = ({ Component, pageProps }) => {
 
   useEffect(() => {
     const handleRouteChange = (url: string) => {
-      (window as any).gtag('config', GA_TRACKING_ID, {
-        page_path: url,
-      });
+      if (process.env.NODE_ENV === 'production') {
+        (window as typeof window & {
+          gtag: (
+            key: string,
+            id: string,
+            options: Record<string, string>
+          ) => void;
+        }).gtag('config', GA_TRACKING_ID, {
+          page_path: url,
+        });
+      }
     };
 
     router.events.on('routeChangeComplete', handleRouteChange);

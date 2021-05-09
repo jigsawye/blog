@@ -78,6 +78,6 @@ export default ResumePage;
 
 export const getStaticProps: GetStaticProps<ResumePageProps> = async () => ({
   props: {
-    content: await renderToString(about),
+    content: await renderToString(about, { components: { Link } }),
   },
 });

@@ -1,10 +1,9 @@
 import Link from 'next/link';
 import hydrate from 'next-mdx-remote/hydrate';
-import renderToString from 'next-mdx-remote/render-to-string';
 import { GetStaticProps, NextPage } from 'next';
 
 import { getPosts } from '../lib/api';
-import Post from '../types/post';
+import { PostType } from '../types';
 import Container from '../components/common/Container';
 import formatDate from '../lib/formatDate';
 import {
@@ -17,7 +16,7 @@ import {
 import MetaData from '../components/MetaData';
 
 type IndexPageProps = {
-  posts: Post[];
+  posts: Pick<PostType, 'slug' | 'title' | 'date' | 'excerpt'>[];
 };
 
 const IndexPage: NextPage<IndexPageProps> = ({ posts }) => (
@@ -45,24 +44,10 @@ const IndexPage: NextPage<IndexPageProps> = ({ posts }) => (
 
 export default IndexPage;
 
-export const getStaticProps: GetStaticProps = async () => {
+export const getStaticProps: GetStaticProps<IndexPageProps> = async () => {
   const posts = await getPosts(['title', 'date', 'slug', 'excerpt']);
 
-  let formattedPosts: Partial<Post>[] = [];
-
-  // eslint-disable-next-line no-restricted-syntax
-  for (const post of posts) {
-    formattedPosts = [
-      ...formattedPosts,
-      {
-        ...post,
-        // eslint-disable-next-line no-await-in-loop
-        excerpt: await renderToString(post.excerpt),
-      },
-    ];
-  }
-
   return {
-    props: { posts: formattedPosts },
+    props: { posts },
   };
 };
