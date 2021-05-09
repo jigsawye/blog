@@ -11,8 +11,10 @@
     "format:mdx": "prettier --write _posts/*.mdx"
   },
   "dependencies": {
+    "@mdx-js/react": "^1.6.22",
     "@react-spring/web": "^9.1.2",
     "disqus-react": "^1.0.11",
+    "github-slugger": "^1.3.0",
     "gray-matter": "^4.0.2",
     "javascript-time-ago": "^2.3.4",
     "next": "^10.2.0",
@@ -26,8 +28,10 @@
     "typescript": "^4.0.3"
   },
   "devDependencies": {
+    "@types/github-slugger": "^1.3.0",
     "@types/javascript-time-ago": "^2.0.2",
     "@types/jest": "^26.0.23",
+    "@types/mdx-js__react": "^1.5.3",
     "@types/node": "^15.0.1",
     "@types/react": "^17.0.4",
     "@types/react-dom": "^17.0.3",

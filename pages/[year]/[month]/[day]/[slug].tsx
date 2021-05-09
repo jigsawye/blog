@@ -8,11 +8,9 @@ import Container from '../../../../components/common/Container';
 import Disqus from '../../../../components/Disqus';
 import MetaData from '../../../../components/MetaData';
 import {
-  ArticleContent,
   ArticleTitleSection,
   BackToIndexLink,
 } from '../../../../components/Article';
-import CodeBlock from '../../../../components/CodeBlock';
 
 type PostPageProps = {
   post: Pick<PostType, 'slug' | 'title' | 'date' | 'excerpt' | 'content'>;
@@ -20,11 +18,7 @@ type PostPageProps = {
 
 const PostPage: NextPage<PostPageProps> = ({ post }) => {
   const excerpt = post.excerpt.renderedOutput.replace(/<[^>]*>/g, '');
-  const content = hydrate(post.content, {
-    components: {
-      code: CodeBlock,
-    },
-  });
+  const content = hydrate(post.content);
 
   return (
     <>
@@ -33,7 +27,7 @@ const PostPage: NextPage<PostPageProps> = ({ post }) => {
       <ArticleTitleSection title={post.title} date={post.date} />
 
       <Container>
-        <ArticleContent>{content}</ArticleContent>
+        {content}
 
         <Link href="/" passHref>
           <BackToIndexLink>← Back to Home</BackToIndexLink>

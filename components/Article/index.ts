@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 
 export { default as ArticleTitleSection } from './ArticleTitleSection';
-export { default as ArticleContent } from './ArticleContent';
 export { default as ArticleWrapper } from './ArticleWrapper';
 
 export const DateWrapper = styled.div`

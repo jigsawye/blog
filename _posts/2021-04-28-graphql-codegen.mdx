@@ -71,13 +71,13 @@ const PostPage = () => {
 
 現在 `server side api` <-> `api docs` <-> `client side types` 之間，前半段已經由 GraphQL 自動化處理了，那麼後半段呢？假設我們可以讓這三者間都透過自動化解決呢？是不是就能有效提升開發效率，降低失誤的可能性？
 
-### Code generator
+## Code generator
 
 如果是使用 apollo-client 的話，官方有提供一套基礎的 [apollo-codegen](https://www.apollographql.com/docs/react/development-testing/developer-tooling/#apollo-codegen) 可用，但今天我想介紹的是另一套功能更強大的 [graphql-code-generator](https://www.graphql-code-generator.com/)。
 
 `graphql-codegen` 除了 apollo client 以外也有完整的 plugin 提供，以支援各種不同實作的，像是前端也可以支援 flow type 或 reason，也支援 Vue Apollo 或 Urql，語言也不局限於 TypeScript，可以支援 Java、.Net 等等。
 
-### Plugins
+## Plugins
 
 graphql-codegen 有龐大的 plugins 作為支撐，讓開發者應用到各個不同的情況。以下就舉幾個在 Apollo ecosystem 的常用 plugin 做參考︰
 
@@ -90,7 +90,7 @@ graphql-codegen 有龐大的 plugins 作為支撐，讓開發者應用到各個�
 
 更多的 plugin 可以參考官方的 [All Plugins](https://www.graphql-code-generator.com/docs/plugins/index)
 
-### Config
+## Config
 
 要使用 graphql-codegen 時，除了安裝以外，我們必須有一個 config file 以設定在專案內要如何產生 type
 
@@ -110,7 +110,7 @@ generates:
 
 以上述 config 為例，會產生一個 `types.ts` 在 src 資料夾，裡面會包含從 `http://localhost:3000/graphql` 取得的 schema type。
 
-### Gen files
+## Gen files
 
 回到今天的主題，除了產生 schema 的 type 外，我們怎麼在前端產生舉凡 useQuery、useMutation 等等的 type 呢？接著讓我們一步一步來
 
@@ -297,13 +297,13 @@ const PostPage = () => {
 };
 ```
 
-### 一些小技巧
+## 一些小技巧
 
 - eslint 或 prettier 等等的檢查工具可以跳過 generated files
 - 使用 eslint-plugin-graphql 檢查前端使用的 operation 是否正確
 - 使用 lint-staged 套件檢查 schema 是否有改變，自動進行 codegen
 
-### 結語
+## 結語
 
 本文為求展示簡化了很多的功能，像是可以產生 component 的 fragment type，用來檢查 component 的 props，或是幫 scalars 的 type 進行額外更精確的定義，也可以調整 global config 決定 build 出來的 type name 形式，更多的用法可以參考[官方文件](https://www.graphql-code-generator.com/docs/getting-started/index)。
 

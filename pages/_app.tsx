@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 
 import Layout from '../components/Layout';
+import MDXProvider from '../components/MDXProvider';
 import { GA_TRACKING_ID } from '../lib/constants';
 
 const MyApp: NextPage<AppProps> = ({ Component, pageProps }) => {
@@ -33,7 +34,9 @@ const MyApp: NextPage<AppProps> = ({ Component, pageProps }) => {
 
   return (
     <Layout>
-      <Component {...pageProps} />
+      <MDXProvider>
+        <Component {...pageProps} />
+      </MDXProvider>
     </Layout>
   );
 };

@@ -7,7 +7,6 @@ import { PostType } from '../types';
 import Container from '../components/common/Container';
 import formatDate from '../lib/formatDate';
 import {
-  ArticleContent,
   ArticleWrapper,
   DateWrapper,
   ReadMoreLink,
@@ -31,7 +30,7 @@ const IndexPage: NextPage<IndexPageProps> = ({ posts }) => (
           </Link>
           <DateWrapper>{formatDate(post.date)}</DateWrapper>
 
-          <ArticleContent>{hydrate(post.excerpt)}</ArticleContent>
+          {hydrate(post.excerpt)}
 
           <Link href={`/${post.slug}`} passHref>
             <ReadMoreLink>Read More →</ReadMoreLink>

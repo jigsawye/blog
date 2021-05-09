@@ -3,7 +3,6 @@ import renderToString from 'next-mdx-remote/render-to-string';
 import hydrate from 'next-mdx-remote/hydrate';
 
 import { MdxRemote } from 'next-mdx-remote/types';
-import { ArticleContent } from '../components/Article';
 import { Container, TitleSection } from '../components/common';
 import MetaData from '../components/MetaData';
 
@@ -83,9 +82,7 @@ const AboutPage: NextPage<AboutPageProps> = ({ content }) => (
 
     <TitleSection>About</TitleSection>
 
-    <Container>
-      <ArticleContent>{hydrate(content)}</ArticleContent>
-    </Container>
+    <Container>{hydrate(content)}</Container>
   </>
 );
 

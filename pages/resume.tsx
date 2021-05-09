@@ -4,7 +4,6 @@ import hydrate from 'next-mdx-remote/hydrate';
 
 import { MdxRemote } from 'next-mdx-remote/types';
 import Link from 'next/link';
-import { ArticleContent } from '../components/Article';
 import { Container, TitleSection } from '../components/common';
 import MetaData from '../components/MetaData';
 
@@ -63,13 +62,11 @@ const ResumePage: NextPage<ResumePageProps> = ({ content }) => (
     <TitleSection>[求職] 資深前端工程師</TitleSection>
 
     <Container>
-      <ArticleContent>
-        {hydrate(content, {
-          components: {
-            Link,
-          },
-        })}
-      </ArticleContent>
+      {hydrate(content, {
+        components: {
+          Link,
+        },
+      })}
     </Container>
   </>
 );

@@ -7,6 +7,7 @@ import { useRouter } from 'next/router';
 const NavWrapper = styled.div`
   display: flex;
   align-items: center;
+  height: 80px;
   margin-left: auto;
 `;
 
