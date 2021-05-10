@@ -2,7 +2,7 @@ import fs from 'fs';
 import { join } from 'path';
 import matter from 'gray-matter';
 import { serialize } from 'next-mdx-remote/serialize';
-import { MDXRemoteSerializeResult } from 'next-mdx-remote/dist/types';
+import { MDXRemoteSerializeResult } from 'next-mdx-remote';
 
 import { PostType } from '../types';
 

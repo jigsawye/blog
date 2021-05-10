@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 import { MDXRemote } from 'next-mdx-remote';
-import { renderToStaticMarkup } from 'react-dom/server';
 
 import { getPostBySlug, getPosts } from '../../../../lib/api';
 import { PostType } from '../../../../types';
@@ -12,16 +11,14 @@ import {
   ArticleTitleSection,
   BackToIndexLink,
 } from '../../../../components/Article';
+import serializeMdxSourceToText from '../../../../lib/serializeMdxSourceToText';
 
 type PostPageProps = {
   post: Pick<PostType, 'slug' | 'title' | 'date' | 'excerpt' | 'content'>;
 };
 
 const PostPage: NextPage<PostPageProps> = ({ post }) => {
-  const excerpt = renderToStaticMarkup(<MDXRemote {...post.excerpt} />).replace(
-    /<[^>]*>/g,
-    ''
-  );
+  const excerpt = serializeMdxSourceToText(post.excerpt);
 
   return (
     <>

@@ -1,4 +1,4 @@
-import { MDXRemoteSerializeResult } from 'next-mdx-remote/dist/types';
+import { MDXRemoteSerializeResult } from 'next-mdx-remote';
 
 export type PostType = {
   slug: string;

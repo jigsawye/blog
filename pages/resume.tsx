@@ -1,11 +1,11 @@
 import { GetStaticProps, NextPage } from 'next';
 import { serialize } from 'next-mdx-remote/serialize';
 import { MDXRemote, MDXRemoteSerializeResult } from 'next-mdx-remote';
-
 import Link from 'next/link';
-import { renderToStaticMarkup } from 'react-dom/server';
+
 import { Container, TitleSection } from '../components/common';
 import MetaData from '../components/MetaData';
+import serializeMdxSourceToText from '../lib/serializeMdxSourceToText';
 
 const about = `
 - **<a href="https://www.cakeresume.com/s--3qgnC7TqWdPBhxH-FvJl_g--/jigsawye" target="_blank">線上履歷</a>**
@@ -52,10 +52,7 @@ interface ResumePageProps {
 }
 
 const ResumePage: NextPage<ResumePageProps> = ({ content }) => {
-  const excerpt = renderToStaticMarkup(<MDXRemote {...content} />).replace(
-    /<[^>]*>/g,
-    ''
-  );
+  const excerpt = serializeMdxSourceToText(content);
 
   return (
     <>
