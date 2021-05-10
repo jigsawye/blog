@@ -1,9 +1,9 @@
-import { MdxRemote } from 'next-mdx-remote/types';
+import { MDXRemoteSerializeResult } from 'next-mdx-remote/dist/types';
 
 export type PostType = {
   slug: string;
   title: string;
   date: string;
-  excerpt: MdxRemote.Source;
-  content: MdxRemote.Source;
+  excerpt: MDXRemoteSerializeResult;
+  content: MDXRemoteSerializeResult;
 };

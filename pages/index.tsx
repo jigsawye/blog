@@ -1,6 +1,6 @@
 import Link from 'next/link';
-import hydrate from 'next-mdx-remote/hydrate';
 import { GetStaticProps, NextPage } from 'next';
+import { MDXRemote } from 'next-mdx-remote';
 
 import { getPosts } from '../lib/api';
 import { PostType } from '../types';
@@ -30,7 +30,7 @@ const IndexPage: NextPage<IndexPageProps> = ({ posts }) => (
           </Link>
           <DateWrapper>{formatDate(post.date)}</DateWrapper>
 
-          {hydrate(post.excerpt)}
+          <MDXRemote {...post.excerpt} />
 
           <Link href={`/${post.slug}`} passHref>
             <ReadMoreLink>Read More →</ReadMoreLink>

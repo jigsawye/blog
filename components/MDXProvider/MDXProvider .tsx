@@ -10,7 +10,7 @@ import Image from './Image';
 import Text from './Text';
 import Heading from './Heading';
 
-const components: MDXProviderComponentsProp = {
+export const components: MDXProviderComponentsProp = {
   code: CodeBlock,
   inlineCode: Code,
   img: Image,

@@ -1,9 +1,9 @@
 import fs from 'fs';
 import { join } from 'path';
 import matter from 'gray-matter';
-import renderToString from 'next-mdx-remote/render-to-string';
+import { serialize } from 'next-mdx-remote/serialize';
+import { MDXRemoteSerializeResult } from 'next-mdx-remote/dist/types';
 
-import { MdxRemote } from 'next-mdx-remote/types';
 import { PostType } from '../types';
 
 const postsDirectory = join(process.cwd(), '_posts');
@@ -21,7 +21,7 @@ export const getPostBySlug = async <K extends keyof PostType>(
   const fileContents = fs.readFileSync(fullPath, 'utf8');
   const { data, content } = matter(fileContents);
 
-  const post: Record<string, string | MdxRemote.Source> = {};
+  const post: Record<string, string | MDXRemoteSerializeResult> = {};
 
   // Ensure only the minimal needed data is exposed
   // eslint-disable-next-line no-restricted-syntax
@@ -33,10 +33,10 @@ export const getPostBySlug = async <K extends keyof PostType>(
       );
     } else if (field === 'content') {
       // eslint-disable-next-line no-await-in-loop
-      post.content = await renderToString(content);
+      post.content = await serialize(content);
     } else if (field === 'excerpt') {
       // eslint-disable-next-line no-await-in-loop
-      post.excerpt = await renderToString(content.split('<!-- more -->')[0]);
+      post.excerpt = await serialize(content.split('<!-- more -->')[0]);
     } else if (field === 'date') {
       post.date = new Date(data[field]).toISOString();
     } else if (data[field]) {

@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
-import hydrate from 'next-mdx-remote/hydrate';
+import { MDXRemote } from 'next-mdx-remote';
+import { renderToStaticMarkup } from 'react-dom/server';
 
 import { getPostBySlug, getPosts } from '../../../../lib/api';
 import { PostType } from '../../../../types';
@@ -17,8 +18,10 @@ type PostPageProps = {
 };
 
 const PostPage: NextPage<PostPageProps> = ({ post }) => {
-  const excerpt = post.excerpt.renderedOutput.replace(/<[^>]*>/g, '');
-  const content = hydrate(post.content);
+  const excerpt = renderToStaticMarkup(<MDXRemote {...post.excerpt} />).replace(
+    /<[^>]*>/g,
+    ''
+  );
 
   return (
     <>
@@ -27,7 +30,7 @@ const PostPage: NextPage<PostPageProps> = ({ post }) => {
       <ArticleTitleSection title={post.title} date={post.date} />
 
       <Container>
-        {content}
+        <MDXRemote {...post.content} />
 
         <Link href="/" passHref>
           <BackToIndexLink>← Back to Home</BackToIndexLink>

@@ -1,8 +1,7 @@
 import { GetStaticProps, NextPage } from 'next';
-import renderToString from 'next-mdx-remote/render-to-string';
-import hydrate from 'next-mdx-remote/hydrate';
+import { serialize } from 'next-mdx-remote/serialize';
+import { MDXRemote, MDXRemoteSerializeResult } from 'next-mdx-remote';
 
-import { MdxRemote } from 'next-mdx-remote/types';
 import { Container, TitleSection } from '../components/common';
 import MetaData from '../components/MetaData';
 
@@ -73,7 +72,7 @@ const about = `
 `;
 
 interface AboutPageProps {
-  content: MdxRemote.Source;
+  content: MDXRemoteSerializeResult;
 }
 
 const AboutPage: NextPage<AboutPageProps> = ({ content }) => (
@@ -82,7 +81,9 @@ const AboutPage: NextPage<AboutPageProps> = ({ content }) => (
 
     <TitleSection>About</TitleSection>
 
-    <Container>{hydrate(content)}</Container>
+    <Container>
+      <MDXRemote {...content} />
+    </Container>
   </>
 );
 
@@ -90,6 +91,6 @@ export default AboutPage;
 
 export const getStaticProps: GetStaticProps<AboutPageProps> = async () => ({
   props: {
-    content: await renderToString(about),
+    content: await serialize(about),
   },
 });

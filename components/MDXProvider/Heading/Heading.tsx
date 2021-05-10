@@ -1,8 +1,7 @@
 import styled from 'styled-components';
 import { FC, HTMLAttributes } from 'react';
-import Slugger from 'github-slugger';
 
-const slugger = new Slugger();
+import { useSlug } from '../../SlugContext/SlugContext';
 
 const HeadingAnchorTarget = styled.span`
   display: block;
@@ -88,6 +87,7 @@ const styledHeadings = {
 
 const createHeading = (key: keyof typeof styledHeadings) => {
   const Heading: FC<HeadingProps> = ({ children }) => {
+    const slugger = useSlug();
     const HeadingComponent = styledHeadings[key];
     const slug = slugger.slug(children as string);
 

@@ -1,14 +1,17 @@
 import { NextPage } from 'next';
 import { AppProps } from 'next/app';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
+import Slugger from 'github-slugger';
 
 import Layout from '../components/Layout';
 import MDXProvider from '../components/MDXProvider';
+import { SlugContext } from '../components/SlugContext/SlugContext';
 import { GA_TRACKING_ID } from '../lib/constants';
 
 const MyApp: NextPage<AppProps> = ({ Component, pageProps }) => {
   const router = useRouter();
+  const slugger = useRef(new Slugger());
 
   useEffect(() => {
     const handleRouteChange = (url: string) => {
@@ -33,11 +36,13 @@ const MyApp: NextPage<AppProps> = ({ Component, pageProps }) => {
   }, [router.events]);
 
   return (
-    <Layout>
-      <MDXProvider>
-        <Component {...pageProps} />
-      </MDXProvider>
-    </Layout>
+    <SlugContext.Provider value={slugger.current}>
+      <Layout>
+        <MDXProvider>
+          <Component {...pageProps} />
+        </MDXProvider>
+      </Layout>
+    </SlugContext.Provider>
   );
 };
 

@@ -1,9 +1,9 @@
 import { GetStaticProps, NextPage } from 'next';
-import renderToString from 'next-mdx-remote/render-to-string';
-import hydrate from 'next-mdx-remote/hydrate';
+import { serialize } from 'next-mdx-remote/serialize';
+import { MDXRemote, MDXRemoteSerializeResult } from 'next-mdx-remote';
 
-import { MdxRemote } from 'next-mdx-remote/types';
 import Link from 'next/link';
+import { renderToStaticMarkup } from 'react-dom/server';
 import { Container, TitleSection } from '../components/common';
 import MetaData from '../components/MetaData';
 
@@ -48,33 +48,32 @@ const about = `
 `;
 
 interface ResumePageProps {
-  content: MdxRemote.Source;
+  content: MDXRemoteSerializeResult;
 }
 
-const ResumePage: NextPage<ResumePageProps> = ({ content }) => (
-  <>
-    <MetaData
-      title="[求職] 資深前端工程師"
-      excerpt={content.renderedOutput.replace(/<[^>]*>/g, '')}
-      uri="resume"
-    />
+const ResumePage: NextPage<ResumePageProps> = ({ content }) => {
+  const excerpt = renderToStaticMarkup(<MDXRemote {...content} />).replace(
+    /<[^>]*>/g,
+    ''
+  );
 
-    <TitleSection>[求職] 資深前端工程師</TitleSection>
+  return (
+    <>
+      <MetaData title="[求職] 資深前端工程師" excerpt={excerpt} uri="resume" />
 
-    <Container>
-      {hydrate(content, {
-        components: {
-          Link,
-        },
-      })}
-    </Container>
-  </>
-);
+      <TitleSection>[求職] 資深前端工程師</TitleSection>
+
+      <Container>
+        <MDXRemote {...content} components={{ Link }} />
+      </Container>
+    </>
+  );
+};
 
 export default ResumePage;
 
 export const getStaticProps: GetStaticProps<ResumePageProps> = async () => ({
   props: {
-    content: await renderToString(about, { components: { Link } }),
+    content: await serialize(about),
   },
 });
