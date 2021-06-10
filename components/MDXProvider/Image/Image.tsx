@@ -7,13 +7,16 @@ const Figure = styled.figure`
   margin: 40px 0px;
 `;
 
-const StyledImage = styled.img`
+type ImageSize = 'sm' | 'md';
+
+const StyledImage = styled.img<{ size: ImageSize }>`
   inset: 0px;
   box-sizing: border-box;
   padding: 0px;
   border: none;
   margin: auto;
-  min-width: 100%;
+  width: ${(p) => (p.size === 'md' ? 'auto' : '360px')};
+  min-width: ${(p) => (p.size === 'md' ? '100%' : '0')};
   max-width: 100%;
   min-height: 100%;
   max-height: 100%;
@@ -27,7 +30,9 @@ const Figcaption = styled.figcaption`
   text-align: center;
 `;
 
-type ImageProps = ImgHTMLAttributes<HTMLImageElement>;
+type ImageProps = Omit<ImgHTMLAttributes<HTMLImageElement>, 'size'> & {
+  size: ImageSize;
+};
 
 const Image: FC<ImageProps> = ({ alt, ...props }) => (
   <Figure>

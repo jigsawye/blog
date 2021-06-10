@@ -25,9 +25,11 @@ const IndexPage: NextPage<IndexPageProps> = ({ posts }) => (
     {posts.map((post) => (
       <ArticleWrapper key={post.slug}>
         <Container>
-          <Link href={`/${post.slug}`} passHref>
-            <TitleLink>{post.title}</TitleLink>
-          </Link>
+          <h2>
+            <Link href={`/${post.slug}`} passHref>
+              <TitleLink>{post.title}</TitleLink>
+            </Link>
+          </h2>
           <DateWrapper>{formatDate(post.date)}</DateWrapper>
 
           <MDXRemote {...post.excerpt} />

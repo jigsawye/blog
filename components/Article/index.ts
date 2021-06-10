@@ -11,13 +11,8 @@ export const DateWrapper = styled.div`
 `;
 
 export const TitleLink = styled.a`
-  display: block;
+  color: #000;
   text-decoration: none;
-  color: rgb(0, 0, 0);
-  font-size: 22px;
-  margin-top: 20px;
-  margin-bottom: 0px;
-  text-align: left;
 `;
 
 export const ReadMoreLink = styled.a`
