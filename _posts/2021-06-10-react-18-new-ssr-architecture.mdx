@@ -1,0 +1,289 @@
+---
+title: React 18：新的 SSR 架構解決了什麼問題？
+categories:
+  - note
+tags:
+  - javascript
+  - React
+date: 2021-06-10 12:00:00
+---
+
+React 官方在前幾天（6/8）發表了新的文章 [The Plan for React 18](https://Reactjs.org/blog/2021/06/08/the-plan-for-React-18.html)，新增了一些功能，像是 [Automatic batching](https://github.com/Reactwg/React-18/discussions/21)、[startTransition](https://github.com/Reactwg/React-18/discussions/41) 以及今天的主題 [New Suspense SSR Architecture in React 18](https://github.com/Reactwg/React-18/discussions/37)。
+
+React 18 這次帶來了全新的 SSR 架構，本文節錄重點自該文章，並在文末附上我對這個架構的看法。
+
+<!-- more -->
+
+## 過去的 SSR 架構有什麼缺陷？
+
+過去 SSR 在伺服器的步驟如下：
+
+- 在 server 會抓取整個 app 所需要的資料
+- 在 server 將 app render 為靜態 HTML 並發送 response
+- 在 client 載入整個 app 的 JavaScript
+- 在 client 將 app 中，將所有 JavaScript 邏輯與 server 產生的 HTML 連結在一起（React 官方稱 hydration）
+
+而這樣連續而無法中斷的流程，衍生了許多的問題。
+
+### Render 任何 HTML 之前，必須獲取所有的資料
+
+現在的 SSR 不允許 component 等待資料。在產生 HTML 前必須獲取所有的資料，這樣在部分緩慢的資料庫或 API 時效能會不彰。
+
+### Hydrate 任何 element 之前，必須載入所有的檔案
+
+在載入所有 JavaScript 檔案後，React 必須進行 hydrate 讓所有的 HTML 可以被操作。
+
+React 在 render 時會走過所有的 HTML tree，並把 event handler 綁定到 HTML 上。因此在 client 上所產生的 tree 要跟 HTML tree 完全吻合，所以在 hydrate 之前必須載入所有元件的 JavaScript。
+
+### 操作任何 UI 之前，必須 hydrate 所有 element
+
+hydrate 本身也有一樣的問題，他的過程是連續且不中斷的，意思就是在 React 幫整個 HTML tree hydrate 結束前，所有的 HTML 都無法被操作。
+
+## React 18 帶來的新 SSR 架構：Streaming HTML 及 Selective Hydration
+
+因為獲取資料（server）→ render 成 HTML（server）→ 載入 code（client）→ hydrate（client）的流程本身就是一個 waterfall，所以為了解決此問題，React 官方提出的新架構就是將整個 app 的 waterfall，拆分成多個元件分別執行此流程。
+
+而解問題的作法就是採用了之前提出的 `<Suspense>` API。
+
+### 在取得資料前 Streaming HTML
+
+現今的 SSR 在 render HTML 及 hydrate 是個 0 或 1 的過程，首先你會 render HTML：
+
+```html
+<main>
+  <nav>
+    <!--NavBar -->
+    <a href="/">Home</a>
+   </nav>
+  <aside>
+    <!-- Sidebar -->
+    <a href="/profile">Profile</a>
+  </aside>
+  <article>
+    <!-- Post -->
+    <p>Hello world</p>
+  </article>
+  <section>
+    <!-- Comments -->
+    <p>First comment</p>
+    <p>Second comment</p>
+  </section>
+</main>
+```
+
+你的 client 會收到一個靜態的 HTML（灰色區塊代表無法操作）：
+
+<img size="sm" src="https://camo.githubusercontent.com/e44ee4be56e56e74da3b9f7f5519ca6197b24e9c34488df933140950f1b31c38/68747470733a2f2f717569702e636f6d2f626c6f622f5963474141416b314234322f534f76496e4f2d73625973566d5166334159372d52413f613d675a6461346957316f5061434668644e36414f48695a396255644e78715373547a7a42326c32686b744a3061" />
+
+接著會載入所有的 code 並進行 hydrate（綠色區塊代表可操作）：
+
+<img size="sm" src="https://camo.githubusercontent.com/8b2ae54c1de6c1b24d9080d2a50a68141f7f57252803543c30cc69cdd4b82fa1/68747470733a2f2f717569702e636f6d2f626c6f622f5963474141416b314234322f784d50644159634b76496c7a59615f3351586a5561413f613d354748716b387a7939566d523255565a315a38746454627373304a7553335951327758516f3939666b586361" />
+
+但在 React 18，你可以使用 `<Suspense>` 將需要延遲載入的 component 包起來。
+
+例如我們將 `<Comments>` 包起來，告訴 React 這個區塊準備好之前，先顯示 `<Spinner />`：
+
+```jsx
+<Layout>
+  <NavBar />
+  <Sidebar />
+  <RightPane>
+    <Post />
+    <Suspense fallback={<Spinner />}>
+      <Comments />
+    </Suspense>
+  </RightPane>
+</Layout>
+```
+
+因為 `<Comments>` 被 `<Suspense>` 包起來了，所以 React 不會等待這個區塊 render 完成，就會開始向 client 發送 streaming HTML，而該區塊會顯示為 fallback 的 placeholder。
+
+<img size="sm" src="https://camo.githubusercontent.com/484be91b06f3f998b3bda9ba3efbdb514394ab70484a8db2cf5774e32f85a2b8/68747470733a2f2f717569702e636f6d2f626c6f622f5963474141416b314234322f704e6550316c4253546261616162726c4c71707178413f613d716d636f563745617955486e6e69433643586771456961564a52637145416f56726b39666e4e564646766361" />
+
+現在得到的 SSR HTML 會長的像這樣：
+
+```html
+<main>
+  <nav>
+    <!--NavBar -->
+    <a href="/">Home</a>
+   </nav>
+  <aside>
+    <!-- Sidebar -->
+    <a href="/profile">Profile</a>
+  </aside>
+  <article>
+    <!-- Post -->
+    <p>Hello world</p>
+  </article>
+  <section id="comments-spinner">
+    <!-- Spinner -->
+    <img width=400 src="spinner.gif" alt="Loading..." />
+  </section>
+</main>
+```
+
+接著當 `<Comments>` 元件在 server 準備好時，React 會將額外的 HTML 送到同一個 stream，並包含一個最小的 inline script，將該區塊放入正確的位置：
+
+```html
+<div hidden id="comments">
+  <!-- Comments -->
+  <p>First comment</p>
+  <p>Second comment</p>
+</div>
+<script>
+  // 簡化的實作
+  document.getElementById('sections-spinner').replaceChildren(
+    document.getElementById('comments')
+  );
+</script>
+```
+
+結果如下，即便 React 還沒被載入，之後的 `<Comments>` 也會被放入正確的位置：
+
+<img size="sm" src="https://camo.githubusercontent.com/e44ee4be56e56e74da3b9f7f5519ca6197b24e9c34488df933140950f1b31c38/68747470733a2f2f717569702e636f6d2f626c6f622f5963474141416b314234322f534f76496e4f2d73625973566d5166334159372d52413f613d675a6461346957316f5061434668644e36414f48695a396255644e78715373547a7a42326c32686b744a3061" />
+
+這個架構解決了現行 SSR 的第一個問題。現在 render HTML 前就不需獲取所有的資料。
+
+而且這個做法與傳統的 HTML streaming 不同，它並不在乎順序。像是你也可以將 `<Sidebar>` 使用 `<Suspense>` 包起來，因為 React 會連將該元件插入正確位置的 script 一起發送，所以不按照順序也會插入正確的位置。
+
+### 在所有 code 載入前開始 hydrate
+
+我們現在已經可以儘早的發送 HTML，但是在 `<Comments>` 的 code 載入之前，我們無法為整個 client 的 app 進行 hydrate，如果 bundle size 很大的話需要一段時間。
+
+為了避免較大的 bundle size，你可以使用 code splitting 的技巧指定部分的 code 不要同步載入。
+
+```jsx
+import { lazy } from 'React';
+
+const Comments = lazy(() => import('./Comments.js'));
+
+// ...
+
+<Suspense fallback={<Spinner />}>
+  <Comments />
+</Suspense>
+```
+
+但是這在過去是不支援 SSR 的，不過在 React 18 允許你在 `<Comments>` 元件載入前就開始 hydrate。
+
+從使用者的角度看，他們會先收到無法進行操作的 HTML：
+
+<img size="sm" src="https://camo.githubusercontent.com/484be91b06f3f998b3bda9ba3efbdb514394ab70484a8db2cf5774e32f85a2b8/68747470733a2f2f717569702e636f6d2f626c6f622f5963474141416b314234322f704e6550316c4253546261616162726c4c71707178413f613d716d636f563745617955486e6e69433643586771456961564a52637145416f56726b39666e4e564646766361" />
+
+<img size="sm" src="https://camo.githubusercontent.com/e44ee4be56e56e74da3b9f7f5519ca6197b24e9c34488df933140950f1b31c38/68747470733a2f2f717569702e636f6d2f626c6f622f5963474141416b314234322f534f76496e4f2d73625973566d5166334159372d52413f613d675a6461346957316f5061434668644e36414f48695a396255644e78715373547a7a42326c32686b744a3061" />
+
+接著 React 會進行 hydrate，即便 `<Comments>` 元件的 code 還沒載入：
+
+<img size="sm" src="https://camo.githubusercontent.com/4892961ac26f8b8dacbd53189a8d3fd1b076aa16fe451f8e2723528f51b80f66/68747470733a2f2f717569702e636f6d2f626c6f622f5963474141416b314234322f304e6c6c3853617732454247793038657149635f59413f613d6a396751444e57613061306c725061516467356f5a56775077774a357a416f39684c31733349523131636f61" />
+
+這就是 Selective Hydration 的例子。透過將 `<Comments>` 包在 `<Suspense>` 內，告訴 React 這個區塊不應該 block stream，同時他也不會 block hydrate。這樣也解決的第二個問題：現在不需等待所有的 code 被載入後才開始 hydrate。
+
+React 會在 `<Comments>` 的 code 載入完成後繼續剩下的 hydrate 流程：
+
+<img size="sm" src="https://camo.githubusercontent.com/8b2ae54c1de6c1b24d9080d2a50a68141f7f57252803543c30cc69cdd4b82fa1/68747470733a2f2f717569702e636f6d2f626c6f622f5963474141416b314234322f784d50644159634b76496c7a59615f3351586a5561413f613d354748716b387a7939566d523255565a315a38746454627373304a7553335951327758516f3939666b586361" />
+
+### 在所有 HTML stream 完畢前進行 hydrate
+
+React 會自動地處理這些 hydrate 流程，例如 HTML 還需要一點時間才會 stream 完成：
+
+<img size="sm" src="https://camo.githubusercontent.com/484be91b06f3f998b3bda9ba3efbdb514394ab70484a8db2cf5774e32f85a2b8/68747470733a2f2f717569702e636f6d2f626c6f622f5963474141416b314234322f704e6550316c4253546261616162726c4c71707178413f613d716d636f563745617955486e6e69433643586771456961564a52637145416f56726b39666e4e564646766361" />
+
+如果 JavaScript 的 code 在 HTML stream 完成前就提前載入，React 不會等待 HTML 而是直接開始 hydrate：
+
+<img size="sm" src="https://camo.githubusercontent.com/ee5fecf223cbbcd6ca8c80beb99dbea40ccbacf1b281f4cf8ac6970c554eefa3/68747470733a2f2f717569702e636f6d2f626c6f622f5963474141416b314234322f384c787970797a66786a4f4a753475344e44787570413f613d507a6a534e50564c61394a574a467a5377355776796e56354d715249616e6c614a4d77757633497373666761" />
+
+當 `<Comments>` 的 HTML 載入完成後，該區塊並不能馬上進行操作，因為他的 JavaScript 還沒被載入：
+
+<img size="sm" src="https://camo.githubusercontent.com/4892961ac26f8b8dacbd53189a8d3fd1b076aa16fe451f8e2723528f51b80f66/68747470733a2f2f717569702e636f6d2f626c6f622f5963474141416b314234322f304e6c6c3853617732454247793038657149635f59413f613d6a396751444e57613061306c725061516467356f5a56775077774a357a416f39684c31733349523131636f61" />
+
+最後當 `<Comments>` 的 JavaScript 載入後整個頁面都會變得可以操作：
+
+<img size="sm" src="https://camo.githubusercontent.com/8b2ae54c1de6c1b24d9080d2a50a68141f7f57252803543c30cc69cdd4b82fa1/68747470733a2f2f717569702e636f6d2f626c6f622f5963474141416b314234322f784d50644159634b76496c7a59615f3351586a5561413f613d354748716b387a7939566d523255565a315a38746454627373304a7553335951327758516f3939666b586361" />
+
+### 在所有 components hydrate 完成前進行操作
+
+當我們把 `<Comments>` 包在 `<Suspense>` 內時還有額外的加強，現在 hydrate 不會 block 瀏覽器的其他行為。
+
+舉個例子，當 `<Comments>` 正在 hydrate 時點擊側邊欄：
+
+<img size="sm" src="https://camo.githubusercontent.com/6cc4eeef439feb3c17d0ac09c701c0deffe170c60a039afa8c0b85d7d4b9c9ef/68747470733a2f2f717569702e636f6d2f626c6f622f5963474141416b314234322f5358524b357573725862717143534a3258396a4769673f613d77504c72596361505246624765344f4e305874504b356b4c566839384747434d774d724e5036374163786b61" />
+
+在 React 18 中，`<Suspense>` 內的 hydrate 行為會穿插在瀏覽器處理事件的間隙之間，意指點擊的事件會立即被處理而不會造成瀏覽器的卡頓，即便在效能較差的裝置也是如此。
+
+在我們的例子中只有 `<Comments>` 被 `<Suspense>` 包起來，所以只要一次額外的 hydrate 就可以完成整個頁面的 hydrate。我們可以再使用更多的 `<Suspense>` 來調整這個問題：
+
+```jsx
+<Layout>
+  <NavBar />
+  <Suspense fallback={<Spinner />}>
+    <Sidebar />
+  </Suspense>
+  <RightPane>
+    <Post />
+    <Suspense fallback={<Spinner />}>
+      <Comments />
+    </Suspense>
+  </RightPane>
+</Layout>
+```
+
+現在除了 `<NavBar>` 及 `<Post>` 會從 server 拿到 HTML，其他的兩個部分都會透過 stream 取得，這樣調整也會影響到 hydrate 的行為。假設 `<Suspense>` 區塊的 JavaScript 還沒載入：
+
+<img size="sm" src="https://camo.githubusercontent.com/9eab3bed0a55170fde2aa2f8ac197bc06bbe157b6ee9446c7e0749409b8ed978/68747470733a2f2f717569702e636f6d2f626c6f622f5963474141416b314234322f78744c50785f754a55596c6c6746474f616e504763413f613d4e617972396c63744f6b4b46565753344e374e6d625335776a39524473344f63714f674b7336765a43737361" />
+
+接著兩者的 JavaScript 被載入，React 會對這兩個 `<Suspense>` 區塊進行 hydrate。因為 `<Sidebar>` 是 tree 中較早被找到的，所以會先進行：
+
+<img size="sm" src="https://camo.githubusercontent.com/9eab3bed0a55170fde2aa2f8ac197bc06bbe157b6ee9446c7e0749409b8ed978/68747470733a2f2f717569702e636f6d2f626c6f622f5963474141416b314234322f78744c50785f754a55596c6c6746474f616e504763413f613d4e617972396c63744f6b4b46565753344e374e6d625335776a39524473344f63714f674b7336765a43737361" />
+
+若此時 user 點擊了 `<Comments>`（該 JavaScript 已載入）：
+
+<img size="sm" src="https://camo.githubusercontent.com/af5a0db884da33ba385cf5f2a2b7ed167c4eaf7b1e28f61dac533a621c31414b/68747470733a2f2f717569702e636f6d2f626c6f622f5963474141416b314234322f443932634358744a61514f4157536f4e2d42523074413f613d3069613648595470325a6e4d6a6b774f75615533725248596f57754e3659534c4b7a49504454384d714d4561" />
+
+React 會紀錄這個點擊事件，並轉而優先對 `<Comments>` 進行 hydrate：
+
+<img size="sm" src="https://camo.githubusercontent.com/f76a33458a3e698125063884035e7f126104bc2c27c30c02fe8e9ebdf3048c7b/68747470733a2f2f717569702e636f6d2f626c6f622f5963474141416b314234322f5a647263796a4c49446a4a304261385a53524d546a513f613d67397875616d6c427756714d77465a3567715a564549497833524c6e7161485963464b55664f554a4d707761" />
+
+在 `<Comments>` hydrate 完成後，React 會重播被記錄的點擊事件（再執行一次）。最後 React 再幫 `<Sidebar>` 進行 hydrate：
+
+<img size="sm" src="https://camo.githubusercontent.com/64ea29524fa1ea2248ee0e721d1816387127507fd3d73a013f89266162b20fba/68747470733a2f2f717569702e636f6d2f626c6f622f5963474141416b314234322f525a636a704d72424c6f7a694635625a792d396c6b773f613d4d5455563334356842386e5a6e6a4a4c3875675351476c7a4542745052373963525a354449483471644b4d61" />
+
+如此一來就解決了第三個問題，我們不必在互動時就將所有元件都 hydrate。React 會盡量提早進行 hydrate，並根據使用者操作的部分優先處理。如果考慮在整個 app 中使用 `<Suspense>` 時，Selective Hydration 所帶來的好處會更加明顯：
+
+<img size="sm" src="https://camo.githubusercontent.com/dbbedbfe934b41a8b4e4ed663d66e94c3e748170df599c20e259680037bc506c/68747470733a2f2f717569702e636f6d2f626c6f622f5963474141416b314234322f6c5559557157304a38525634354a39505364315f4a513f613d39535352654f4a733057513275614468356f6932376e61324265574d447a775261393739576e566e52684561" />
+
+在這個例子中，使用者在 hydrate 開始時就點擊第一個 Comment，React 會優先處理所有 parent `<Suspense>` 的內容，但跳過所有不相關的 sibling 元件。這就會產生一種 hydrate 是即時的錯覺，因為被操作的元件至 root 路徑上的所有元件都會優先被 hydrate。
+
+實際運用時你可能會在 root 附近加上 `<Suspense>`：
+
+```jsx
+<Layout>
+  <NavBar />
+  <Suspense fallback={<BigSpinner />}>
+    <Suspense fallback={<SidebarGlimmer />}>
+      <Sidebar />
+    </Suspense>
+    <RightPane>
+      <Post />
+      <Suspense fallback={<CommentsGlimmer />}>
+        <Comments />
+      </Suspense>
+    </RightPane>
+  </Suspense>
+</Layout>
+```
+
+上述範例的初始 HTML 內容只會包含 NavBar，其餘部分會採用 streaming HTML 及部分 hydrate 的方式載入，並優先處理使用者操作的區塊。
+
+## 結語
+
+這次 React 18 在 SSR 帶來架構性的革新，也取消了當初 Concurrent mode 只能選擇全用或者不用的情境。改成 Concurrent rendering 並讓開發者可以自由的嘗試新功能。採用這種逐步採用的策略更有助於 React 推廣新版本。
+
+而過去最常聽到需要 SSR 的情境通常都是用在 SEO 比較多，但其實這次 React 發表的新架構反倒是為了使用者體驗的推出的。以官方的例子來說，被 Suspense 的區塊並不會在第一次的 render 中出現，所以在搜尋引擎爬到的時候可能會影響 SEO。
+
+不過 Dan 自己也有在該文底下[回覆關於 SEO 的問題](https://github.com/reactwg/react-18/discussions/37#discussioncomment-842581)，其實只要在遇到搜尋引擎時使用 `onCompleteAll` 取代 `onReadyToStream` 就會跟過去 SSR 的行為一樣了。但這麼做可能造成 response 的速度變慢，也會影響排名。Sebastian 也有在後續留言補充更多關於此架構在 SEO 上能做的調整及取捨。
+
+Google 將在 2021 的 6 月中旬[將 web vitals 納入搜尋引擎排名](https://developers.google.com/search/blog/2021/04/more-details-page-experience)的一部分，該如何在速度及內容之間作出權衡可能是未來開發者所要面臨的課題，可以窺見未來 SEO 及 SSR 的玩法會擦出更多火花。
+
+![](https://camo.githubusercontent.com/9b4a81355b6e0a6051e434304b5381430575283ddcfe73ff0a391847295b7b5c/68747470733a2f2f692e696d67666c69702e636f6d2f3563643665782e6a7067)
+
