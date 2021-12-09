@@ -1,0 +1,112 @@
+---
+title: React Conf 2021 為 React 18 帶來了哪些新東西？
+categories:
+  - note
+tags:
+  - javascript
+  - typescript
+  - React
+date: 2021-12-09 23:00:00
+---
+
+[React Conf 2021](https://conf.reactjs.org) 今天剛結束，除了許多今年稍早發布過的內容，像是之前在 concurrent mode 提過的 `useDeferredValue`，另外也介紹了全新的 react devtool timeline 功能、未來不必手動加上 memorized 的 react forget project 等等，本文將以這次為了 react 18 所新發布的功能來做介紹。
+
+<!-- more -->
+
+## useDeferredValue
+
+`useDeferredValue` 可以回推至早期實驗的 [Concurrent Mode API](https://reactjs.org/docs/concurrent-mode-reference.html#usedeferredvalue) 文件中就有提到，不過不知為何在 React 18 alpha 後遲遲未出現關於此 API 的說明，只介紹了相似作用的 [startTransition](https://github.com/reactwg/react-18/discussions/41)。
+
+不過在這次的 react conf 中終於提到了這個 API，同時也進行使用的 demo：
+
+```tsx
+// ...
+
+const [filters, mergeFilters] = useMergeState(defaultFilters);
+
+const deferredFilters = React.useDeferredValue(filters);
+
+return (
+  <Fragment>
+    <Breadcrumbs items={['Projects', name, 'Kanban Board']} />
+    <Header />
+    <Filters
+      projectUsers={project.users}
+      defaultFilters={defaultFilters}
+      filters={filters}
+      mergeFilters={mergeFilters}
+    />
+    <Lists
+      project={project}
+      filters={deferredFilters}
+      updateLocalProjectIssues={updateLocalProjectIssues}
+    />
+
+// ...
+```
+
+如果直接將 `filters` 傳入 `<Lists>` 中使用，在 CPU 效能不高的裝置會因為 `filters` 頻繁變動而導致 `<Lists>` 的效能不佳產生卡頓。在使用透過 useDeferredValue 產生出 `deferredFilters` 後，在 filter 頻繁變動時所造成的 re-render 會直接棄用，改用最新的 filters 進行 render。
+
+`useDeferredValue` 及 `startTransition` 都是在 concurrent features 中誕生的產物，能讓你將某些 state 標註為 non-urgent（非緊急），讓他們可以在優先度較高的 state 發生改變後進行取消 render，進而增進 render 的效能。
+
+Dan 曾在今年 9 月時[說到](https://github.com/reactwg/react-18/discussions/100#discussioncomment-1382060)沒有提出是因為他們還沒想出好方法來解釋它．不過也提到 startTransition 不能在某些情況下採用才誕生出這個 hook。
+
+## React Developer Tooling - hooks, profile and timeline
+
+### Devtool 現在能夠顯示 hook name
+
+在 hooks 推出時 devtool 也同時支援了 hooks 的顯示，但是讓人詬病的是 hooks 無法呈現出它的 name。在這次的發表中，devtool 能夠透過透過 source map 取得 source code 再 parse 成 AST 的方式來抓到 hooks 的 name 了。
+
+![](https://i.imgur.com/2O4Ef1m.png)
+
+### Profile 現在會告訴你為何 re-render
+
+加強後的 Profile 能夠呈現更多資訊，包含他的 priority / 誰造成他更新，以及最重要的為何會 render。
+
+![](https://i.imgur.com/UMk3baf.png)
+
+
+### Timeline
+
+![](https://i.imgur.com/7kj7SLK.png)
+
+這次 react conf 帶來全新 timeline 功能，此功能就如同 browser devtool 的 performance 功能一樣，但是是專屬於 react 的版本。
+
+timeline 會呈現完整的 insight，並會在效能有改善空間時提醒你調整：
+
+![提醒可以使用 deferred value](https://i.imgur.com/D13XKrf.png)
+
+同時也支援 Suspense 的顯示狀態：
+
+![Suspend 的 component 會在右側顯示 loading](https://i.imgur.com/yXlSBry.png)
+
+而且除了在 react 發生的 insight 之外，也能夠呈現 react 以外的執行，例如 `JSON.parse`：
+
+![捕捉到 react context 之外的 parseItems](https://i.imgur.com/XI4bgjc.png)
+
+## React without memo - react forget
+
+現在的 react 若要在實作 component 時要避免不必要的 re-render 就必須手動使用 memo / useCallback / useMemo。
+
+範例程式碼給了一段效能不好的實作，隨意操作後動輒 2.300 次的 re-render：
+
+![](https://i.imgur.com/j2G4RKc.png)
+
+雖然我們可以額外手動加上 useMemo 來增進效能，相對的確犧牲的開發體驗，還必須思考變數之間的關係：
+
+![](https://i.imgur.com/sgESQ5o.png)
+
+![](https://i.imgur.com/nHSMnwI.png)
+
+因此 react team 內部推動了一個 react forget 的 project，透過 compiler 來自動進行更有效率的 memorized。
+概念上就像是把 memo 的實作拆解至 component 內部，並透過 compiler 去分析 dependencies 有哪些，接著進行 value changed 的判斷及 cache 的更新：
+
+![](https://i.imgur.com/Wz1kh8H.png)
+
+目前 react forget 還在內部實驗階段，他們正在研究一些特殊情況，像是導致 bundle size 增加，甚至是整個 memorize 失敗，但未來啟用後可以無痛的同時增進 DX 及 UX，個人相當期待這個專案的完整發布。
+
+![](https://i.imgur.com/cXPF2IB.png)
+
+## 總結
+
+在 react conf 結束的同時，react 18 也 release rc 版，沒有意外的話將在 2 至 4 周後，也就是 2022 的年初，將可使用到正式版的 react 18。雖然 server components 不會在第一個版本推出，但其他的 concurrent features 就足夠開發者們研究一陣子了。如何將現有的專案升級並使用新功能將是一門值得花時間的功課。

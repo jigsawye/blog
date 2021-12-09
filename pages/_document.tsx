@@ -64,6 +64,10 @@ export default class MyDocument extends Document {
               />
             </>
           )}
+          <link
+            href="https://fonts.googleapis.com/css2?family=Roboto Mono"
+            rel="stylesheet"
+          />
         </Head>
         <body>
           <Main />

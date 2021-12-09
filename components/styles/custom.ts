@@ -20,7 +20,7 @@ export default css`
 
   code,
   pre {
-    font-family: Menlo, Monaco, Consolas, 'Courier New', 'Roboto Mono',
+    font-family: 'Roboto Mono', Menlo, Monaco, Consolas, 'Courier New',
       monospace !important;
   }
 `;

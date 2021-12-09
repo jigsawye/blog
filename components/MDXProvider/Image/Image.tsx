@@ -15,8 +15,8 @@ const StyledImage = styled.img<{ size: ImageSize }>`
   padding: 0px;
   border: none;
   margin: auto;
-  width: ${(p) => (p.size === 'md' ? 'auto' : '360px')};
-  min-width: ${(p) => (p.size === 'md' ? '100%' : '0')};
+  width: ${(p) => (p.size === 'sm' ? '360px' : 'auto')};
+  min-width: ${(p) => (p.size === 'sm' ? '0' : '100%')};
   max-width: 100%;
   min-height: 100%;
   max-height: 100%;

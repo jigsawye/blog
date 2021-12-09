@@ -1,6 +1,9 @@
 import styled from 'styled-components';
 
-export const Anchor = styled.a`
+export const Anchor = styled.a.attrs({
+  target: '_blank',
+  rel: 'noopener noreferrer',
+})`
   color: #0074de;
   font-size: inherit;
   text-decoration: none;
