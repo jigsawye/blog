@@ -1,5 +1,5 @@
 import TimeAgo from 'javascript-time-ago';
-import zhHant from 'javascript-time-ago/locale/zh-Hant';
+import zhHant from 'javascript-time-ago/locale/zh-Hant.json';
 
 TimeAgo.addLocale(zhHant);
 const timeAgo = new TimeAgo('zh-Hant');

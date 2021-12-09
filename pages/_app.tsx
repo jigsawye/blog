@@ -16,13 +16,15 @@ const MyApp: NextPage<AppProps> = ({ Component, pageProps }) => {
   useEffect(() => {
     const handleRouteChange = (url: string) => {
       if (process.env.NODE_ENV === 'production') {
-        (window as typeof window & {
-          gtag: (
-            key: string,
-            id: string,
-            options: Record<string, string>
-          ) => void;
-        }).gtag('config', GA_TRACKING_ID, {
+        (
+          window as typeof window & {
+            gtag: (
+              key: string,
+              id: string,
+              options: Record<string, string>
+            ) => void;
+          }
+        ).gtag('config', GA_TRACKING_ID, {
           page_path: url,
         });
       }
