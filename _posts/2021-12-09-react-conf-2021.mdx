@@ -9,7 +9,7 @@ tags:
 date: 2021-12-09 23:00:00
 ---
 
-[React Conf 2021](https://conf.reactjs.org) 今天剛結束，除了許多今年稍早發布過的內容，像是之前在 concurrent mode 提過的 `useDeferredValue`，另外也介紹了全新的 react devtool timeline 功能、未來不必手動加上 memorized 的 react forget project 等等，本文將以這次為了 react 18 所新發布的功能來做介紹。
+[React Conf 2021](https://conf.reactjs.org) 今天剛結束，除了許多今年稍早發布過的內容，像是之前在 concurrent mode 提過的 `useDeferredValue`，另外也介紹了全新的 react devtool timeline 功能、未來不必手動加上 memoize 的 react forget project 等等，本文將以這次為了 react 18 所新發布的功能來做介紹。
 
 <!-- more -->
 
@@ -65,7 +65,6 @@ Dan 曾在今年 9 月時[說到](https://github.com/reactwg/react-18/discussion
 
 ![](https://i.imgur.com/UMk3baf.png)
 
-
 ### Timeline
 
 ![](https://i.imgur.com/7kj7SLK.png)
@@ -92,13 +91,13 @@ timeline 會呈現完整的 insight，並會在效能有改善空間時提醒你
 
 ![](https://i.imgur.com/j2G4RKc.png)
 
-雖然我們可以額外手動加上 useMemo 來增進效能，相對的確犧牲的開發體驗，還必須思考變數之間的關係：
+雖然我們可以額外手動加上 useMemo 來增進效能，相對的卻犧牲的開發體驗，還必須思考變數之間的關係：
 
 ![](https://i.imgur.com/sgESQ5o.png)
 
 ![](https://i.imgur.com/nHSMnwI.png)
 
-因此 react team 內部推動了一個 react forget 的 project，透過 compiler 來自動進行更有效率的 memorized。
+因此 react team 內部推動了一個 react forget 的 project，透過 compiler 來自動進行更有效率的 memoize。
 概念上就像是把 memo 的實作拆解至 component 內部，並透過 compiler 去分析 dependencies 有哪些，接著進行 value changed 的判斷及 cache 的更新：
 
 ![](https://i.imgur.com/Wz1kh8H.png)
