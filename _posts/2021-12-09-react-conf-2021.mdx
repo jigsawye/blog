@@ -9,7 +9,7 @@ tags:
 date: 2021-12-09 23:00:00
 ---
 
-[React Conf 2021](https://conf.reactjs.org) 今天剛結束，除了許多今年稍早發布過的內容，像是之前在 concurrent mode 提過的 `useDeferredValue`，另外也介紹了全新的 react devtool timeline 功能、未來不必手動加上 memoize 的 react forget project 等等，本文將以這次為了 react 18 所新發布的功能來做介紹。
+[React Conf 2021](https://conf.reactjs.org) 今天剛結束，除了許多今年稍早發布過的內容，像是之前在 concurrent mode 提過的 `useDeferredValue`，另外也介紹了全新的 react devtool timeline 功能、未來不必手動加上 memoize 的 React Forget project 等等，本文將以這次為了 react 18 所新發布的功能來做介紹。
 
 <!-- more -->
 
@@ -83,7 +83,7 @@ timeline 會呈現完整的 insight，並會在效能有改善空間時提醒你
 
 ![捕捉到 react context 之外的 parseItems](https://i.imgur.com/XI4bgjc.png)
 
-## React without memo - react forget
+## React without memo - React Forget
 
 現在的 react 若要在實作 component 時要避免不必要的 re-render 就必須手動使用 memo / useCallback / useMemo。
 
@@ -97,12 +97,12 @@ timeline 會呈現完整的 insight，並會在效能有改善空間時提醒你
 
 ![](https://i.imgur.com/nHSMnwI.png)
 
-因此 react team 內部推動了一個 react forget 的 project，透過 compiler 來自動進行更有效率的 memoize。
+因此 react team 內部推動了一個 React Forget 的 project，透過 compiler 來自動進行更有效率的 memoize。
 概念上就像是把 memo 的實作拆解至 component 內部，並透過 compiler 去分析 dependencies 有哪些，接著進行 value changed 的判斷及 cache 的更新：
 
 ![](https://i.imgur.com/Wz1kh8H.png)
 
-目前 react forget 還在內部實驗階段，他們正在研究一些特殊情況，像是導致 bundle size 增加，甚至是整個 memorize 失敗，但未來啟用後可以無痛的同時增進 DX 及 UX，個人相當期待這個專案的完整發布。
+目前 React Forget 還在內部實驗階段，他們正在研究一些特殊情況，像是導致 bundle size 增加，甚至是整個 memorize 失敗，但未來啟用後可以無痛的同時增進 DX 及 UX，個人相當期待這個專案的完整發布。
 
 ![](https://i.imgur.com/cXPF2IB.png)
 
