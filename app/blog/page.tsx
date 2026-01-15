@@ -1,3 +1,5 @@
+'use client';
+
 import Link from "next/link";
 import { blog } from "@/lib/source";
 import { PathUtils } from 'fumadocs-core/source';
@@ -14,31 +16,43 @@ export default function Page() {
   );
 
   return (
-    <main className="mx-auto w-full max-w-page px-4 pb-12 md:py-12">
-      <div className="relative dark mb-4 aspect-[3.2] p-8 z-2 md:p-12">
-        <h1 className="mb-4 text-3xl text-landing-foreground font-mono font-medium">
-          Fumadocs Blog
-        </h1>
-        <p className="text-sm font-mono text-landing-foreground-200">
-          Latest announcements of Fumadocs.
-        </p>
-      </div>
-      <div className="grid grid-cols-1 gap-2 md:grid-cols-3 xl:grid-cols-4">
-        {posts.map((post) => (
-          <Link
-            key={post.url}
-            href={post.url}
-            className="flex flex-col bg-fd-card rounded-2xl border shadow-sm p-4 transition-colors hover:bg-fd-accent hover:text-fd-accent-foreground"
-          >
-            <p className="font-medium">{post.data.title}</p>
-            <p className="text-sm text-fd-muted-foreground">{post.data.description}</p>
+    <main className="flex flex-1 flex-col bg-linear-to-b from-fd-background to-fd-accent/10 overflow-hidden">
+      <section className="mx-auto w-full max-w-5xl px-6 py-12 md:py-16">
+        {/* Header Section */}
+        <div className="mb-12 flex flex-col items-start gap-4 animate-fd-fade-up md:mb-16">
+          <h1 className="text-balance text-4xl font-mono font-semibold tracking-tight text-fd-foreground sm:text-5xl lg:text-6xl">
+            BLOG
+          </h1>
+          <p className="text-balance text-base font-mono leading-relaxed text-fd-muted-foreground sm:text-lg">
+            Thoughts on code, design, and everything in between.
+          </p>
+        </div>
 
-            <p className="mt-auto pt-4 text-xs text-brand">
-              {new Date(post.data.date ?? getName(post.path)).toDateString()}
-            </p>
-          </Link>
-        ))}
-      </div>
+        {/* Posts List */}
+        <div className="flex flex-col gap-3">
+          {posts.map((post, index) => (
+            <Link
+              key={post.url}
+              href={post.url}
+              className="flex flex-col md:flex-row md:items-center md:justify-between bg-fd-card rounded-xl border shadow-sm p-5 md:p-6 transition-all hover:scale-[1.02] hover:shadow-lg hover:bg-fd-accent hover:text-fd-accent-foreground animate-fd-fade-up"
+              style={{
+                animationDelay: `${index * 50}ms`,
+              }}
+            >
+              <div className="flex-1">
+                <p className="font-medium text-lg mb-1">{post.data.title}</p>
+                <p className="text-sm text-fd-muted-foreground">
+                  {post.data.description}
+                </p>
+              </div>
+
+              <p className="mt-3 md:mt-0 md:ml-6 text-xs font-mono text-fd-muted-foreground whitespace-nowrap">
+                {new Date(post.data.date ?? getName(post.path)).toDateString()}
+              </p>
+            </Link>
+          ))}
+        </div>
+      </section>
     </main>
   );
 }
