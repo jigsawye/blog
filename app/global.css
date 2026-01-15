@@ -1,3 +1,64 @@
 @import 'tailwindcss';
 @import 'fumadocs-ui/css/neutral.css';
 @import 'fumadocs-ui/css/preset.css';
+
+@keyframes fd-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fd-slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(16px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+.animate-fd-fade-up {
+  animation: fd-fade-up 500ms ease-out 60ms both;
+}
+
+.animate-fd-slide-in-right {
+  animation: fd-slide-in-right 650ms cubic-bezier(0.19, 1, 0.22, 1) 90ms both;
+}
+
+.fd-orbit {
+  position: absolute;
+  inset: -10%;
+  border-radius: 9999px;
+  border-width: 1px;
+  border-style: dashed;
+  border-color: color-mix(in srgb, var(--fd-border) 55%, transparent);
+  pointer-events: none;
+}
+
+.fd-orbit--outer {
+  animation: fd-orbit-spin 26s linear infinite;
+}
+
+.fd-orbit--inner {
+  inset: 0%;
+  border-style: solid;
+  border-color: color-mix(in srgb, var(--fd-primary) 36%, transparent);
+  opacity: 0.7;
+  animation: fd-orbit-spin 18s linear infinite reverse;
+}
+
+@keyframes fd-orbit-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
