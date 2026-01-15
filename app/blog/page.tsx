@@ -1,5 +1,5 @@
-import Link from "next/link";
-import { blog } from "@/lib/source";
+import Link from 'next/link';
+import { blog } from '@/lib/source';
 import { PathUtils } from 'fumadocs-core/source';
 
 function getName(path: string) {
@@ -39,9 +39,7 @@ export default function Page() {
             >
               <div className="flex-1">
                 <p className="font-medium text-lg mb-1">{post.data.title}</p>
-                <p className="text-sm text-fd-muted-foreground">
-                  {post.data.description}
-                </p>
+                <p className="text-sm text-fd-muted-foreground">{post.data.description}</p>
               </div>
 
               <p className="mt-3 md:mt-0 md:ml-6 text-xs font-mono text-fd-muted-foreground whitespace-nowrap">

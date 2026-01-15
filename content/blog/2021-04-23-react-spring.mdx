@@ -30,9 +30,9 @@ CSS 動畫要用在 react 的世界中有點反直覺，像是早期的 [React T
 ### useSpring
 
 react-spring 中最基本的 API 就是 useSpring，用於數值間的 transition，一個簡單的範例可以寫成這樣：
-{/*
-```jsx live=true
-() => {
+
+```tsx
+function Demo() {
   const [open, setOpen] = useState(false);
   const props = useSpring({ width: open ? 240 : 40 });
 
@@ -53,17 +53,17 @@ react-spring 中最基本的 API 就是 useSpring，用於數值間的 transitio
       {props.width.to((x) => x.toFixed(0))}
     </animated.div>
   );
-};
-``` */}
+}
+```
 
 當按下該 div 後就會將 width 從 40px transition 到 240px，children 也會顯示對應的數值。
 
 特別要注意的是，所有 react-spring 給的 props 都是 [SpringValue](https://react-spring.io/classes/spring-value)，若要讓其作為 style 使用，就要放到 react-spring 提供的 `animated.x` 元件。
 
 除了數值外，參數也支援字串間的轉換：
-{/*
-```jsx live=true
-() => {
+
+```tsx
+function Demo() {
   const [open, setOpen] = useState(false);
   const props = useSpring({
     transform: open ? 'translateX(100px)' : 'translateX(0px)',
@@ -87,8 +87,8 @@ react-spring 中最基本的 API 就是 useSpring，用於數值間的 transitio
       Item
     </animated.div>
   );
-};
-``` */}
+}
+```
 
 useSpring 常見的使用情境例如﹔一個可以打開／收合的 Collapse 元件、enable／disable 時會改變 toggle 位置的 Switch 元件。
 
@@ -103,7 +103,7 @@ useSpring 常見的使用情境例如﹔一個可以打開／收合的 Collapse 
 ```jsx
 const springs = useSprings(
   number,
-  items.map((item) => ({ opacity: item.opacity }))
+  items.map((item) => ({ opacity: item.opacity })),
 );
 
 return springs.map((styles) => <animated.div style={styles} />);
@@ -116,9 +116,9 @@ return springs.map((styles) => <animated.div style={styles} />);
 ### useTransition
 
 useTransition 應該是最常用的 hooks，用於實作單一元件或列表 mount／unmount 的動畫效果，避免僵直的元件切換讓使用者感到錯愕：
-{/*
-```jsx live=true
-() => {
+
+```tsx
+function Demo() {
   const [toggle, setToggle] = useState(false);
   const transitions = useTransition(toggle, {
     from: { opacity: 0 },
@@ -128,10 +128,7 @@ useTransition 應該是最常用的 hooks，用於實作單一元件或列表 mo
 
   return (
     <div style={{ display: 'flex', height: 40 }}>
-      <button
-        style={{ marginRight: 16 }}
-        onClick={() => setToggle((prev) => !prev)}
-      >
+      <button style={{ marginRight: 16 }} onClick={() => setToggle((prev) => !prev)}>
         {toggle ? 'Hide' : 'Show'}
       </button>
       {transitions(
@@ -146,12 +143,12 @@ useTransition 應該是最常用的 hooks，用於實作單一元件或列表 mo
             >
               😄
             </animated.div>
-          )
+          ),
       )}
     </div>
   );
-};
-``` */}
+}
+```
 
 <code url="https://codesandbox.io/embed/github/pmndrs/react-spring/tree/master/demo/src/sandboxes/simple-transition?fontsize=14&hidenavigation=1&theme=dark&view=preview" />
 

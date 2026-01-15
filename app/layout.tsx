@@ -19,19 +19,23 @@ export const metadata = createMetadata({
 export default function Layout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className='relative flex min-h-screen flex-col'>
-        <RootProvider search={{enabled: false}}>
-        <HomeLayout {...baseOptions()} links={[
-          {
-            icon: <AlbumIcon />,
-            text: 'Blog',
-            url: '/blog',
-            active: 'nested-url',
-          },
-        ]}>{children}</HomeLayout>
+      <body className="relative flex min-h-screen flex-col">
+        <RootProvider search={{ enabled: false }}>
+          <HomeLayout
+            {...baseOptions()}
+            links={[
+              {
+                icon: <AlbumIcon />,
+                text: 'Blog',
+                url: '/blog',
+                active: 'nested-url',
+              },
+            ]}
+          >
+            {children}
+          </HomeLayout>
         </RootProvider>
       </body>
     </html>
   );
 }
-

@@ -1,0 +1,17 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "rules": {
+    "react": "warn",
+    "typescript": "warn",
+    "jsx-a11y": "warn",
+    "nextjs": "warn"
+  },
+  "ignorePatterns": [
+    ".next/**",
+    "out/**",
+    "build/**",
+    "next-env.d.ts",
+    ".source/**",
+    "node_modules/**"
+  ]
+}

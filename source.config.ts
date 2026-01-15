@@ -1,4 +1,9 @@
-import { applyMdxPreset, defineConfig, defineCollections, frontmatterSchema } from 'fumadocs-mdx/config';
+import {
+  applyMdxPreset,
+  defineConfig,
+  defineCollections,
+  frontmatterSchema,
+} from 'fumadocs-mdx/config';
 import jsonSchema from 'fumadocs-mdx/plugins/json-schema';
 import lastModified from 'fumadocs-mdx/plugins/last-modified';
 import { z } from 'zod';

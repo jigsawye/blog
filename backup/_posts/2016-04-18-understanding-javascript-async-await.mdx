@@ -28,8 +28,7 @@ const posts = [
   { title: 'Post 2', content: 'fake content' },
 ];
 
-const getPosts = () =>
-  new Promise((resolve) => setTimeout(() => resolve(posts), 1000));
+const getPosts = () => new Promise((resolve) => setTimeout(() => resolve(posts), 1000));
 ```
 
 我習慣寫 ES2015 的 arrow function，如果看不習慣的話，在一般 function 會像下面這樣：
@@ -51,8 +50,7 @@ function getPosts() {
 在 Promise 的做法中，我們就會這樣來實作取得 posts 的程式：
 
 ```js
-const printPostsToConsole = () =>
-  getPosts().then((posts) => console.log(posts));
+const printPostsToConsole = () => getPosts().then((posts) => console.log(posts));
 
 printPostsToConsole();
 ```

@@ -375,10 +375,7 @@ redis.on('message', function (channel, notification) {
   notification = JSON.parse(notification);
 
   // 使用 to() 指定傳送的 room，也就是傳遞給指定的使用者
-  io.to('token:' + notification.data.token).emit(
-    'notification',
-    notification.data.message
-  );
+  io.to('token:' + notification.data.token).emit('notification', notification.data.message);
 });
 
 // 監聽 3000 port

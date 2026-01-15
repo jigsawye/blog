@@ -208,9 +208,7 @@ export type GetPostQueryVariables = Exact<{
 }>;
 
 export type GetPostQuery = { __typename?: 'Query' } & {
-  post?: Maybe<
-    { __typename?: 'Post' } & Pick<Types.Post, 'id', 'title', 'content'>
-  >;
+  post?: Maybe<{ __typename?: 'Post' } & Pick<Types.Post, 'id', 'title', 'content'>>;
 };
 
 /**
@@ -230,29 +228,20 @@ export type GetPostQuery = { __typename?: 'Query' } & {
  * });
  */
 export function useGetPostQuery(
-  baseOptions: Apollo.QueryHookOptions<GetPostQuery, GetPostQueryVariables>
+  baseOptions: Apollo.QueryHookOptions<GetPostQuery, GetPostQueryVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<GetPostQuery, GetPostQueryVariables>(
-    GetPostDocument,
-    options
-  );
+  return Apollo.useQuery<GetPostQuery, GetPostQueryVariables>(GetPostDocument, options);
 }
 export function useGetPostLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<GetPostQuery, GetPostQueryVariables>
+  baseOptions?: Apollo.LazyQueryHookOptions<GetPostQuery, GetPostQueryVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<GetPostQuery, GetPostQueryVariables>(
-    GetPostDocument,
-    options
-  );
+  return Apollo.useLazyQuery<GetPostQuery, GetPostQueryVariables>(GetPostDocument, options);
 }
 export type GetPostQueryHookResult = ReturnType<typeof useGetPostQuery>;
 export type GetPostLazyQueryHookResult = ReturnType<typeof useGetPostLazyQuery>;
-export type GetPostQueryResult = Apollo.QueryResult<
-  GetPostQuery,
-  GetPostQueryVariables
->;
+export type GetPostQueryResult = Apollo.QueryResult<GetPostQuery, GetPostQueryVariables>;
 ```
 
 產生的檔案也很貼心的幫你寫上的範例，接著只要在元件內按照範例寫上：

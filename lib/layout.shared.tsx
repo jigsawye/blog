@@ -17,10 +17,12 @@ export const logo = (
 export function baseOptions(): BaseLayoutProps {
   return {
     nav: {
-      title:  <>
-      {logo}
-      <span className="font-medium in-[.uwu]:hidden">JIGSAWYE</span>
-    </>
+      title: (
+        <>
+          {logo}
+          <span className="font-medium in-[.uwu]:hidden">JIGSAWYE</span>
+        </>
+      ),
     },
   };
 }
