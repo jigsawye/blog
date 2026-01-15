@@ -21,12 +21,13 @@ export default async function Page(props: PageProps<'/blog/[slug]'>) {
     <article className="flex flex-col mx-auto w-full max-w-[800px] px-4 py-8">
       <div className="flex flex-row gap-4 text-sm mb-8">
         <div>
-          <p className="mb-1 text-sm text-fd-muted-foreground">At</p>
-          <p className="font-medium">
+          <span className="mb-1 text-sm text-fd-muted-foreground">At</span>
+          {' '}
+          <span className="font-medium">
             {new Date(
               page.data.date ?? path.basename(page.path, path.extname(page.path)),
             ).toDateString()}
-          </p>
+          </span>
         </div>
       </div>
 
@@ -40,7 +41,6 @@ export default async function Page(props: PageProps<'/blog/[slug]'>) {
             href="/blog"
             className={cn(
               buttonVariants({
-                size: 'sm',
                 variant: 'secondary',
               }),
             )}

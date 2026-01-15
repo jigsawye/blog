@@ -1,5 +1,3 @@
-'use client';
-
 import Link from "next/link";
 import { blog } from "@/lib/source";
 import { PathUtils } from 'fumadocs-core/source';

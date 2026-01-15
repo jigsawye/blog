@@ -49,31 +49,31 @@ Dan 曾在今年 9 月時[說到](https://github.com/reactwg/react-18/discussion
 
 在 hooks 推出時 devtool 也同時支援了 hooks 的顯示，但是讓人詬病的是 hooks 無法呈現出它的 name。在這次的發表中，devtool 能夠透過透過 source map 取得 source code 再 parse 成 AST 的方式來抓到 hooks 的 name 了。
 
-![](https://i.imgur.com/2O4Ef1m.png)
+![](/images/blog/react-conf-hooks-name.png)
 
 ### Profile 現在會告訴你為何 re-render
 
 加強後的 Profile 能夠呈現更多資訊，包含他的 priority / 誰造成他更新，以及最重要的為何會 render。
 
-![](https://i.imgur.com/UMk3baf.png)
+![](/images/blog/react-conf-profile.png)
 
 ### Timeline
 
-![](https://i.imgur.com/7kj7SLK.png)
+![](/images/blog/react-conf-timeline.png)
 
 這次 react conf 帶來全新 timeline 功能，此功能就如同 browser devtool 的 performance 功能一樣，但是是專屬於 react 的版本。
 
 timeline 會呈現完整的 insight，並會在效能有改善空間時提醒你調整：
 
-![提醒可以使用 deferred value](https://i.imgur.com/D13XKrf.png)
+![提醒可以使用 deferred value](/images/blog/react-conf-deferred-value.png)
 
 同時也支援 Suspense 的顯示狀態：
 
-![Suspend 的 component 會在右側顯示 loading](https://i.imgur.com/yXlSBry.png)
+![Suspend 的 component 會在右側顯示 loading](/images/blog/react-conf-suspense.png)
 
 而且除了在 react 發生的 insight 之外，也能夠呈現 react 以外的執行，例如 `JSON.parse`：
 
-![捕捉到 react context 之外的 parseItems](https://i.imgur.com/XI4bgjc.png)
+![捕捉到 react context 之外的 parseItems](/images/blog/react-conf-parse-items.png)
 
 ## React without memo - React Forget
 
@@ -81,22 +81,22 @@ timeline 會呈現完整的 insight，並會在效能有改善空間時提醒你
 
 範例程式碼給了一段效能不好的實作，隨意操作後動輒 2.300 次的 re-render：
 
-![](https://i.imgur.com/j2G4RKc.png)
+![](/images/blog/react-conf-re-render.png)
 
 雖然我們可以額外手動加上 useMemo 來增進效能，相對的卻犧牲的開發體驗，還必須思考變數之間的關係：
 
-![](https://i.imgur.com/sgESQ5o.png)
+![](/images/blog/react-conf-usememo.png)
 
-![](https://i.imgur.com/nHSMnwI.png)
+![](/images/blog/react-conf-usememo-result.png)
 
 因此 react team 內部推動了一個 React Forget 的 project，透過 compiler 來自動進行更有效率的 memoize。
 概念上就像是把 memo 的實作拆解至 component 內部，並透過 compiler 去分析 dependencies 有哪些，接著進行 value changed 的判斷及 cache 的更新：
 
-![](https://i.imgur.com/Wz1kh8H.png)
+![](/images/blog/react-conf-forget-concept.png)
 
 目前 React Forget 還在內部實驗階段，他們正在研究一些特殊情況，像是導致 bundle size 增加，甚至是整個 memoize 失敗，但未來啟用後可以無痛的同時增進 DX 及 UX，個人相當期待這個專案的完整發布。
 
-![](https://i.imgur.com/cXPF2IB.png)
+![](/images/blog/react-conf-forget-result.png)
 
 ## 總結
 
