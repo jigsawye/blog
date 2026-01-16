@@ -7,9 +7,9 @@ export const revalidate = false;
 
 export async function GET(_req: Request, { params }: RouteContext<'/og/[...slug]'>) {
   const { slug } = await params;
-  console.log(slug);
+
   const page = blog.getPage(slug);
-  console.log(page);
+
   if (!page) notFound();
 
   return new ImageResponse(
