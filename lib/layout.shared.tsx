@@ -1,16 +1,10 @@
 import type { BaseLayoutProps } from 'fumadocs-ui/layouts/shared';
 import Image from 'next/image';
-import Logo from '@/public/logo.png';
+import Logo from '@/public/logo.svg';
 
 export const logo = (
   <>
-    <Image
-      alt="JIGSAWYE"
-      src={Logo}
-      sizes="100px"
-      className="hidden w-22 in-[.uwu]:block"
-      aria-label="JIGSAWYE"
-    />
+    <Image alt="JIGSAWYE" src={Logo} width={20} height={20} aria-label="JIGSAWYE" />
   </>
 );
 
@@ -20,7 +14,7 @@ export function baseOptions(): BaseLayoutProps {
       title: (
         <>
           {logo}
-          <span className="font-medium in-[.uwu]:hidden">JIGSAWYE</span>
+          <span className="font-medium">JIGSAWYE</span>
         </>
       ),
     },
