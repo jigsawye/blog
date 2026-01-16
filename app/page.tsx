@@ -1,49 +1,8 @@
-'use client';
-
 import Link from 'next/link';
-import { useRef, useState } from 'react';
 import { Github, Linkedin, Instagram } from 'lucide-react';
+import { InteractiveCard } from './page.client';
 
 export default function HomePage() {
-  const cardRef = useRef<HTMLDivElement>(null);
-  const [rotateX, setRotateX] = useState(0);
-  const [rotateY, setRotateY] = useState(0);
-  const [mouseX, setMouseX] = useState(50);
-  const [mouseY, setMouseY] = useState(50);
-  const [isHovering, setIsHovering] = useState(false);
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!cardRef.current) return;
-
-    const card = cardRef.current;
-    const rect = card.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
-
-    const rotateXValue = ((y - centerY) / centerY) * -3;
-    const rotateYValue = ((x - centerX) / centerX) * 3;
-
-    const mouseXPercent = (x / rect.width) * 100;
-    const mouseYPercent = (y / rect.height) * 100;
-
-    setRotateX(rotateXValue);
-    setRotateY(rotateYValue);
-    setMouseX(mouseXPercent);
-    setMouseY(mouseYPercent);
-  };
-
-  const handleMouseEnter = () => {
-    setIsHovering(true);
-  };
-
-  const handleMouseLeave = () => {
-    setRotateX(0);
-    setRotateY(0);
-    setIsHovering(false);
-  };
   return (
     <main className="flex flex-1 flex-col bg-linear-to-b from-fd-background to-fd-accent/10 overflow-hidden">
       <section className="mx-auto flex min-h-[calc(100vh-4rem)] w-full max-w-5xl flex-1 flex-col items-center justify-center gap-8 px-6 py-10 md:flex-row md:gap-10">
@@ -114,23 +73,7 @@ export default function HomePage() {
             <div className="fd-orbit fd-orbit--outer" />
             <div className="fd-orbit fd-orbit--inner" />
 
-            <div
-              ref={cardRef}
-              onMouseMove={handleMouseMove}
-              onMouseEnter={handleMouseEnter}
-              onMouseLeave={handleMouseLeave}
-              style={{
-                transform: `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`,
-                transition:
-                  rotateX === 0 && rotateY === 0
-                    ? 'transform 0.5s ease-out, box-shadow 0.3s ease-out'
-                    : 'transform 0s',
-                boxShadow: isHovering
-                  ? `${(mouseX - 50) * 0.4}px ${(mouseY - 50) * 0.4}px 40px rgba(0, 0, 0, 0.12), 0 20px 70px rgba(0, 0, 0, 0.25)`
-                  : '0 20px 70px rgba(0, 0, 0, 0.25)',
-              }}
-              className="group absolute inset-0 flex flex-col overflow-hidden rounded-xl border border-fd-border/60 bg-fd-background/80 backdrop-blur dark:shadow-2xl"
-            >
+            <InteractiveCard>
               {/* Header bar */}
               <div className="flex items-center justify-between border-b border-fd-border/50 bg-fd-muted/20 px-4 py-2.5">
                 <div className="flex items-center gap-2">
@@ -241,16 +184,7 @@ export default function HomePage() {
                   </div>
                 </div>
               </div>
-
-              {/* Glow effect on hover - dark mode (white) */}
-              <div
-                className="pointer-events-none absolute -inset-[1px] rounded-xl opacity-0 blur transition-opacity duration-300 hidden dark:block"
-                style={{
-                  opacity: isHovering ? 0.4 : 0,
-                  background: `radial-gradient(600px circle at ${mouseX}% ${mouseY}%, rgba(255, 255, 255, 0.1), transparent 40%)`,
-                }}
-              />
-            </div>
+            </InteractiveCard>
           </div>
         </div>
       </section>
