@@ -4,7 +4,6 @@
     "": {
       "name": "my-app",
       "dependencies": {
-        "@orama/orama": "^3.1.18",
         "@takumi-rs/image-response": "^0.62.8",
         "fumadocs-core": "16.4.7",
         "fumadocs-mdx": "14.2.5",
