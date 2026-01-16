@@ -77,7 +77,7 @@ export default function HomePage() {
 
         <div className="flex w-full flex-1 justify-center md:mt-0">
           <div
-            className="relative h-72 w-full max-w-md animate-fd-slide-in-right sm:h-64"
+            className="relative h-76 w-full max-w-md animate-fd-slide-in-right sm:h-64"
             style={{ perspective: '1000px' }}
           >
             <div className="fd-orbit fd-orbit--outer" />
