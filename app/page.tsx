@@ -1,6 +1,16 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Github, Linkedin, Instagram } from 'lucide-react';
 import { InteractiveCard } from './page.client';
+import { createMetadata } from '@/lib/metadata';
+
+export const metadata: Metadata = createMetadata({
+  description:
+    'Building digital experiences, curating fits, and capturing moments. Staff Frontend Engineer at Dcard.',
+  openGraph: {
+    images: '/banner.png',
+  },
+});
 
 export default function HomePage() {
   return (

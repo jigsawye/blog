@@ -1,6 +1,13 @@
 import Link from 'next/link';
 import { blog } from '@/lib/source';
 import { PathUtils } from 'fumadocs-core/source';
+import { createMetadata } from '@/lib/metadata';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = createMetadata({
+  title: 'Blog',
+  description: 'Thoughts on code, design, and everything in between.',
+});
 
 function getName(path: string) {
   return PathUtils.basename(path, PathUtils.extname(path));

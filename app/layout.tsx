@@ -5,7 +5,7 @@ import { RootProvider } from 'fumadocs-ui/provider/next';
 import type { ReactNode } from 'react';
 import { createMetadata, baseUrl } from '@/lib/metadata';
 import './global.css';
-import { AlbumIcon } from 'lucide-react';
+import { AlbumIcon, UserIcon } from 'lucide-react';
 
 export const metadata = createMetadata({
   title: {
@@ -28,6 +28,12 @@ export default function Layout({ children }: { children: ReactNode }) {
                 icon: <AlbumIcon />,
                 text: 'Blog',
                 url: '/blog',
+                active: 'nested-url',
+              },
+              {
+                icon: <UserIcon />,
+                text: 'About',
+                url: '/about',
                 active: 'nested-url',
               },
             ]}
