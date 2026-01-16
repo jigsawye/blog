@@ -36,10 +36,10 @@ export default function HomePage() {
                 Read the blog
               </Link>
               <Link
-                href="/blog"
+                href="/about"
                 className="inline-flex items-center text-sm font-medium text-fd-muted-foreground underline-offset-4 transition-colors hover:text-fd-foreground hover:underline sm:text-base"
               >
-                Skim latest posts
+                About me
               </Link>
             </div>
 
