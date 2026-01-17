@@ -1,7 +1,12 @@
 import { getPageImage, blog } from '@/lib/source';
 import { notFound } from 'next/navigation';
 import { ImageResponse } from '@takumi-rs/image-response';
-import { getImageResponseOptions, MetadataImage } from '@/lib/og/generate';
+import {
+  getImageResponseOptions,
+  MetadataDescription,
+  MetadataImage,
+  MetadataTitle,
+} from '@/lib/og/generate';
 
 export const revalidate = false;
 
@@ -13,7 +18,10 @@ export async function GET(_req: Request, { params }: RouteContext<'/og/[...slug]
   if (!page) notFound();
 
   return new ImageResponse(
-    <MetadataImage title={page.data.title} description={page.data.description} />,
+    <MetadataImage eyebrow="Blog">
+      <MetadataTitle>{page.data.title}</MetadataTitle>
+      <MetadataDescription>{page.data.description}</MetadataDescription>
+    </MetadataImage>,
     await getImageResponseOptions(),
   );
 }

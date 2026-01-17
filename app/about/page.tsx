@@ -5,7 +5,13 @@ import { createMetadata } from '@/lib/metadata';
 export const metadata: Metadata = createMetadata({
   title: 'About',
   description:
-    'My professional journey and experience. Staff Frontend Engineer at Dcard with expertise in TypeScript, React, and modern web technologies.',
+    'My professional journey and experience with expertise in TypeScript, React, and modern web technologies.',
+  openGraph: {
+    images: '/og/about',
+  },
+  twitter: {
+    images: '/og/about',
+  },
 });
 
 interface Experience {

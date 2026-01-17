@@ -8,7 +8,10 @@ export const metadata: Metadata = createMetadata({
   description:
     'Building digital experiences, curating fits, and capturing moments. Staff Frontend Engineer at Dcard.',
   openGraph: {
-    images: '/banner.png',
+    images: '/og/home',
+  },
+  twitter: {
+    images: '/og/home',
   },
 });
 
