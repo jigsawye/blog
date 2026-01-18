@@ -1,6 +1,7 @@
 import { HomeLayout } from 'fumadocs-ui/layouts/home';
 import { baseOptions } from '@/lib/layout.shared';
 import { Analytics } from '@vercel/analytics/next';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 
 import { RootProvider } from 'fumadocs-ui/provider/next';
 import type { ReactNode } from 'react';
@@ -43,6 +44,7 @@ export default function Layout({ children }: { children: ReactNode }) {
           </HomeLayout>
         </RootProvider>
         <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
