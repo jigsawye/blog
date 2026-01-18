@@ -60,22 +60,22 @@ const experiences: Experience[] = [
           {
             title: 'Zero-Runtime CSS',
             description:
-              'Architected a custom library (`@dcard/calico-css`) to replace runtime CSS-in-JS. Reduced CSS size by **78%** and eliminated runtime overhead.',
+              'Architected a custom library to replace runtime CSS-in-JS. Reduced CSS size by **78%** and eliminated runtime overhead.',
           },
           {
             title: 'Next.js App Router',
             description:
-              'Led the migration to React 18 and App Router. Optimized critical portals (e.g., OAuth), reducing First Contentful Paint (FCP) by **29%** (1.4s → 1.0s).',
+              'Migrated to React 18 & App Router. Optimized critical portals (OAuth), reducing FCP by **29%** (1.4s → 1.0s).',
           },
           {
             title: 'SEO Engineering',
             description:
-              'Improved Core Web Vitals (LCP/FID > 95%) by implementing aggressive bundle splitting and removing legacy dependencies (e.g., Redux).',
+              'Achieved **95%+** LCP/FID via aggressive bundle splitting and removing legacy deps (Redux).',
           },
           {
             title: 'Legacy Decoupling',
             description:
-              'Deprecated legacy micro-services and migrated state management to React Query, significantly lowering maintenance costs.',
+              'Deprecated legacy micro-services and migrated state management to React Query, lowering maintenance costs.',
           },
         ],
       },
@@ -239,7 +239,7 @@ export default function AboutPage() {
               {/* Header */}
               <div className="mb-4">
                 <h3 className="text-2xl font-bold text-fd-foreground">{exp.company}</h3>
-                <div className="flex flex-wrap items-center text-fd-muted-foreground text-sm mt-1 gap-x-4">
+                <div className="flex flex-wrap items-center text-fd-foreground/60 text-sm mt-1 gap-x-4">
                   <span
                     className={`font-semibold ${exp.isCurrent ? 'text-fd-primary' : 'text-fd-foreground'}`}
                   >
@@ -252,7 +252,7 @@ export default function AboutPage() {
               </div>
 
               {/* Company Description */}
-              <p className="text-fd-muted-foreground text-sm italic mb-6">{exp.description}</p>
+              <p className="text-fd-foreground/70 text-sm italic mb-6">{exp.description}</p>
 
               {/* Categories (for Dcard-style) */}
               {exp.categories && (
@@ -268,9 +268,9 @@ export default function AboutPage() {
                       <ul className="space-y-3 pl-4">
                         {category.items.map((item, itemIndex) => (
                           <li key={itemIndex} className="relative">
-                            <span className="absolute -left-4 top-2 h-1.5 w-1.5 rounded-full bg-fd-muted-foreground/30" />
-                            <p className="text-fd-muted-foreground leading-relaxed text-sm">
-                              <strong className="text-fd-foreground">{item.title}:</strong>{' '}
+                            <span className="absolute -left-4 top-2 h-1.5 w-1.5 rounded-full bg-fd-primary/60" />
+                            <p className="text-fd-foreground/80 leading-relaxed text-sm">
+                              <strong className="text-fd-foreground font-semibold">{item.title}:</strong>{' '}
                               {parseDescription(item.description)}
                             </p>
                           </li>
@@ -289,7 +289,7 @@ export default function AboutPage() {
                       <h4 className="font-bold text-fd-foreground text-sm uppercase tracking-wide mb-1">
                         {item.title}
                       </h4>
-                      <p className="text-fd-muted-foreground leading-relaxed text-sm">
+                      <p className="text-fd-foreground/80 leading-relaxed text-sm">
                         {parseDescription(item.description)}
                       </p>
                     </div>
