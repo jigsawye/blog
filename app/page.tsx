@@ -31,7 +31,7 @@ export default function HomePage() {
           </div>
 
           <div className="flex flex-col gap-4">
-            <div className="flex flex-wrap items-center gap-3">
+            <div className="flex flex-wrap items-center gap-6">
               <Link
                 href="/blog"
                 className="inline-flex items-center justify-center rounded-md bg-fd-primary px-5 py-2.5 text-sm font-medium text-fd-primary-foreground shadow-inner shadow-fd-background/20 transition-all hover:scale-105 hover:bg-fd-primary/90 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-fd-ring sm:px-6 sm:py-3 sm:text-base"
