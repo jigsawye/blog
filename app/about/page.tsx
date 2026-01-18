@@ -36,7 +36,6 @@ interface Experience {
   role: string;
   period: string;
   location: string;
-  description: string;
   /** For complex structure like Dcard */
   categories?: CategorySection[];
   /** For simple structure like Yoctol/ifalo */
@@ -50,8 +49,7 @@ const experiences: Experience[] = [
     role: 'Staff Engineer',
     period: 'Aug 2021 - Present',
     location: 'Taipei, Taiwan',
-    description:
-      'Staff Engineer at Dcard. Specializing in scalable frontend infrastructure, performance engineering, and Next.js architecture.',
+
     isCurrent: true,
     categories: [
       {
@@ -136,7 +134,6 @@ const experiences: Experience[] = [
     role: 'Software Developer',
     period: 'Apr 2018 - Jul 2021',
     location: 'Taipei, Taiwan',
-    description: 'A Chatbot/AI SaaS platform provider.',
     items: [
       {
         title: 'Design System',
@@ -164,7 +161,6 @@ const experiences: Experience[] = [
     role: 'Frontend Developer',
     period: 'Dec 2016 - Mar 2018',
     location: 'Taichung, Taiwan',
-    description: 'A software development firm specializing in interactive web applications.',
     items: [
       {
         title: 'Web Development',
@@ -241,7 +237,7 @@ export default function AboutPage() {
                 <h3 className="text-2xl font-bold text-fd-foreground">{exp.company}</h3>
                 <div className="flex flex-wrap items-center text-fd-foreground/60 text-sm mt-1 gap-x-4">
                   <span
-                    className={`font-semibold ${exp.isCurrent ? 'text-fd-primary' : 'text-fd-foreground'}`}
+                    className={`font-semibold ${exp.isCurrent ? 'text-fd-primary' : 'text-fd-muted-foreground'}`}
                   >
                     {exp.role}
                   </span>
@@ -250,9 +246,6 @@ export default function AboutPage() {
                   <span>{exp.location}</span>
                 </div>
               </div>
-
-              {/* Company Description */}
-              <p className="text-fd-foreground/70 text-sm italic mb-6">{exp.description}</p>
 
               {/* Categories (for Dcard-style) */}
               {exp.categories && (
@@ -270,7 +263,9 @@ export default function AboutPage() {
                           <li key={itemIndex} className="relative">
                             <span className="absolute -left-4 top-2 h-1.5 w-1.5 rounded-full bg-fd-primary/60" />
                             <p className="text-fd-foreground/80 leading-relaxed text-sm">
-                              <strong className="text-fd-foreground font-semibold">{item.title}:</strong>{' '}
+                              <strong className="text-fd-foreground font-semibold">
+                                {item.title}:
+                              </strong>{' '}
                               {parseDescription(item.description)}
                             </p>
                           </li>
