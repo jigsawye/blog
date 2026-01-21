@@ -49,7 +49,6 @@ const experiences: Experience[] = [
     role: 'Staff Engineer',
     period: 'Aug 2021 - Present',
     location: 'Taipei, Taiwan',
-
     isCurrent: true,
     categories: [
       {
@@ -128,6 +127,30 @@ const experiences: Experience[] = [
         ],
       },
     ],
+  },
+  {
+    company: 'Dcard',
+    role: 'Senior Frontend Developer',
+    period: 'Aug 2021 - Sep 2022',
+    location: 'Taipei, Taiwan',
+    items: [
+      {
+        title: 'Architecture & Delivery',
+        description: 'Balanced high-paced feature delivery with **critical architectural initiatives** (e.g., React 18 upgrade, early CI optimizations).'
+      },
+      {
+        title: 'Product Feature Parity',
+        description: 'Bridged the gap between App and Web by delivering complex features including **Direct Messages**, **Stickers**, and Global Blocking systems.'
+      },
+      {
+        title: 'Talent Acquisition',
+        description: 'Revamped the intern recruitment process, reviewing **70+ applications** in one week and mentoring selected candidates.'
+      },
+      {
+        title: 'Operational Efficiency',
+        description: 'Built internal consoles for BD/CS teams (Keyword Management, NSFW moderation), reducing manual operational overhead.'
+      }
+    ]
   },
   {
     company: 'Yoctol Info. Inc.',
