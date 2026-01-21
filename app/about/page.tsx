@@ -56,76 +56,68 @@ const experiences: Experience[] = [
         items: [
           {
             title: 'Zero-Runtime CSS',
-            description:
-              'Architected a custom library to replace runtime CSS-in-JS. Reduced CSS size by **78%** and eliminated runtime overhead.',
+            description: 'Architected a custom library to replace runtime CSS-in-JS. Reduced CSS size by **78%** and eliminated runtime overhead.'
           },
           {
             title: 'Next.js App Router',
-            description:
-              'Migrated to React 18 & App Router. Optimized critical portals (OAuth), reducing FCP by **29%** (1.4s → 1.0s).',
+            description: 'Migrated to React 18 & App Router. Optimized critical portals (OAuth), reducing FCP by **29%** (1.4s → 1.0s).'
           },
           {
-            title: 'SEO Engineering',
-            description:
-              'Achieved **95%+** LCP/FID via aggressive bundle splitting and removing legacy deps (Redux).',
+            title: 'UI Architecture',
+            description: 'Designed "**Reveal Layout**", a reusable UI pattern accelerating the delivery of complex creator features.'
+          },
+          {
+            title: 'Cross-Platform System',
+            description: 'Designed "**Embed Service**", a unified pre-rendering engine for **Web & Mobile**, solving content fragmentation.'
           },
           {
             title: 'Legacy Decoupling',
-            description:
-              'Deprecated legacy micro-services and migrated state management to React Query, lowering maintenance costs.',
-          },
-        ],
+            description: 'Deprecated legacy micro-services and migrated state management to React Query, reducing technical debt.'
+          }
+        ]
       },
       {
-        title: 'Developer Experience (DX) & Infrastructure',
+        title: 'Platform Engineering & DX',
         items: [
           {
+            title: 'Internal Ecosystem',
+            description: 'Architected standard libraries (Proxy, CSRF, OAuth) to unify security patterns and streamline frontend development.'
+          },
+          {
             title: 'CI/CD Revolution',
-            description:
-              'Implemented **Nx** monorepo and **pnpm**. Reduced pipeline duration by **36%** (22m → 14m) and CircleCI usage by **70%**.',
+            description: 'Implemented **Nx** monorepo and **pnpm**. Reduced pipeline duration by **36%** (22m → 14m) and CircleCI usage by **70%**.'
           },
           {
             title: 'Build Optimization',
-            description:
-              'Replaced Babel with **SWC (Rust)**, accelerating production builds by **30%** and local startup speed by **66%**.',
+            description: 'Replaced Babel with **SWC (Rust)**, accelerating production builds by **30%** and local startup speed by **66%**.'
           },
           {
             title: 'Resource Efficiency',
-            description:
-              'Developed custom containerization tools to optimize Docker images, reducing size and memory footprint by **32%**.',
-          },
-          {
-            title: 'Internal Tooling',
-            description:
-              'Built a suite of standard libraries (Proxy, CSRF, OAuth) to unify security patterns across micro-frontends.',
-          },
-        ],
+            description: 'Developed custom containerization tools to optimize Docker images, reducing cloud footprint by **32%**.'
+          }
+        ]
       },
       {
-        title: 'Product & Leadership',
+        title: 'Product Strategy & Leadership',
         items: [
           {
-            title: 'Monetization',
-            description:
-              'Led frontend implementation of the **Subscription System** (Stripe), successfully launching a key revenue stream.',
+            title: 'Complex Feature Delivery',
+            description: 'Delivered **Creator Economy** features (Personal Wall), optimizing rendering performance for high-traffic views.'
           },
           {
-            title: 'Product Features',
-            description:
-              'Delivered high-complexity features for the Creator Economy, including "Personal Wall" and advanced content filtering.',
+            title: 'Strategic Collaboration',
+            description: 'Conducted **Backend API Design Reviews** to ensure seamless integration and prevent downstream bottlenecks.'
           },
           {
-            title: 'Process Innovation',
-            description:
-              'Pioneered **AI-assisted Code Review** using Claude and GitHub Actions to automate code quality checks.',
+            title: 'Technical Governance',
+            description: 'Established **RFC standards** and pioneered **AI-assisted Code Review** (Claude) to automate quality checks.'
           },
           {
-            title: 'Mentorship',
-            description:
-              'Streamlined intern recruitment (70+ candidates screened) and mentored junior engineers to senior-level promotions.',
-          },
-        ],
-      },
+            title: 'Tech Evangelism',
+            description: 'Represented Dcard at **SITCON** and **React.js TW**, sharing migration insights to strengthen the engineering brand.'
+          }
+        ]
+      }
     ],
   },
   {
