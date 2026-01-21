@@ -5,7 +5,7 @@ import { Fragment } from 'react';
 export const metadata: Metadata = createMetadata({
   title: 'About',
   description:
-    'My professional journey and experience with expertise in TypeScript, React, and modern web technologies.',
+    'Staff Engineer specializing in scalable frontend architecture, performance engineering, and infrastructure modernization.',
   openGraph: {
     images: '/og/about',
   },
@@ -46,7 +46,7 @@ interface Experience {
 const experiences: Experience[] = [
   {
     company: 'Dcard',
-    role: 'Staff Engineer',
+    role: 'Staff Frontend Engineer',
     period: 'Aug 2021 - Present',
     location: 'Taipei, Taiwan',
     isCurrent: true,
