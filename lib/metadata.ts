@@ -1,4 +1,26 @@
 import type { Metadata } from 'next/types';
+import { languageAlternates, localizedPath, type Locale } from './i18n';
+
+export function createLocalizedMetadata(
+  locale: Locale,
+  path: string,
+  override: Metadata,
+): Metadata {
+  return createMetadata({
+    ...override,
+    alternates: {
+      canonical: localizedPath(path, locale),
+      languages: languageAlternates(path),
+      ...override.alternates,
+    },
+    openGraph: {
+      locale: locale === 'en' ? 'en_US' : 'zh_TW',
+      alternateLocale: locale === 'en' ? 'zh_TW' : 'en_US',
+      url: localizedPath(path, locale),
+      ...override.openGraph,
+    },
+  });
+}
 
 export function createMetadata(override: Metadata): Metadata {
   return {

@@ -1,48 +1,52 @@
-import type { Metadata } from 'next';
 import Link from 'next/link';
-import { Github, Linkedin, Instagram } from 'lucide-react';
+import { Github, Linkedin, Instagram } from '@/components/social-icons';
 import { InteractiveCard } from './page.client';
-import { createMetadata } from '@/lib/metadata';
+import { createLocalizedMetadata } from '@/lib/metadata';
+import { localizedPath, type Locale } from '@/lib/i18n';
+import { messages } from '@/lib/messages';
+import { ProjectCard } from '@/components/project-card';
 
-export const metadata: Metadata = createMetadata({
-  description:
-    'Building digital experiences, curating fits, and capturing moments. Staff Frontend Engineer at Dcard.',
-  openGraph: {
-    images: '/og/home',
-  },
-  twitter: {
-    images: '/og/home',
-  },
-});
+export async function generateMetadata({ params }: { params: Promise<{ lang: Locale }> }) {
+  const { lang } = await params;
+  return createLocalizedMetadata(lang, '/', {
+    description: messages.en.homeDescription,
+    openGraph: { images: `/og/${lang}/home` },
+    twitter: { images: `/og/${lang}/home` },
+  });
+}
 
-export default function HomePage() {
+export default async function HomePage({ params }: { params: Promise<{ lang: Locale }> }) {
+  const { lang } = await params;
+  const text = messages.en;
   return (
-    <main className="flex flex-1 flex-col bg-linear-to-b from-fd-background to-fd-accent/10 overflow-hidden">
-      <section className="mx-auto flex min-h-[calc(100vh-4rem)] w-full max-w-5xl flex-1 flex-col items-center justify-center gap-8 px-6 py-10 md:flex-row md:gap-10">
+    <main
+      lang="en"
+      className="flex flex-1 flex-col bg-linear-to-b from-fd-background to-fd-accent/10 overflow-hidden"
+    >
+      <section className="mx-auto flex min-h-[min(44rem,80svh)] w-full max-w-5xl flex-1 flex-col items-center justify-center gap-8 px-6 py-10 md:flex-row md:gap-10">
         <div className="flex w-full max-w-xl flex-1 flex-col items-start gap-6 animate-fd-fade-up md:max-w-xl">
           <div>
             <h1 className="text-balance text-4xl font-semibold tracking-tight text-fd-foreground sm:text-5xl lg:text-6xl">
-              Hi, I&apos;m Evan.
+              {text.greeting}
             </h1>
             <p className="mt-4 text-balance text-base leading-relaxed text-fd-muted-foreground sm:text-lg">
-              Building digital experiences, curating fits, and capturing moments — usually in that
-              order.
+              {text.introduction}
             </p>
           </div>
 
           <div className="flex flex-col gap-4">
             <div className="flex flex-wrap items-center gap-6">
               <Link
-                href="/blog"
+                href={localizedPath('/blog', lang)}
                 className="inline-flex items-center justify-center rounded-md bg-fd-primary px-5 py-2.5 text-sm font-medium text-fd-primary-foreground shadow-inner shadow-fd-background/20 transition-all hover:scale-105 hover:bg-fd-primary/90 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-fd-ring sm:px-6 sm:py-3 sm:text-base"
               >
-                Read the blog
+                {text.readBlog}
               </Link>
               <Link
-                href="/about"
+                href={localizedPath('/about', lang)}
                 className="inline-flex items-center text-sm font-medium text-fd-muted-foreground underline-offset-4 transition-colors hover:text-fd-foreground hover:underline sm:text-base"
               >
-                About me
+                {text.aboutMe}
               </Link>
             </div>
 
@@ -200,6 +204,19 @@ export default function HomePage() {
             </InteractiveCard>
           </div>
         </div>
+      </section>
+      <section
+        id="projects"
+        aria-labelledby="projects-heading"
+        className="mx-auto w-full max-w-5xl px-6 pb-8 md:pb-12"
+      >
+        <h2
+          id="projects-heading"
+          className="mb-2 text-xs font-mono font-semibold tracking-wider text-fd-muted-foreground uppercase"
+        >
+          Side Project
+        </h2>
+        <ProjectCard locale="en" />
       </section>
     </main>
   );

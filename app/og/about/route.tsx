@@ -13,8 +13,8 @@ export async function GET() {
     <MetadataImage accentColor="rgb(34,197,94)">
       <MetadataTitle>About</MetadataTitle>
       <MetadataDescription>
-        Staff Engineer specializing in scalable frontend architecture, performance engineering, and
-        infrastructure modernization.
+        Frontend platforms, product outcomes, and team collaboration through design systems and AI
+        workflows.
       </MetadataDescription>
     </MetadataImage>,
     await getImageResponseOptions(),

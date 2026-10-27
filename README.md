@@ -1,47 +1,65 @@
-# my-app
+# JIGSAWYE
 
-This is a Next.js application generated with
-[Create Fumadocs](https://github.com/fuma-nama/fumadocs).
+A Next.js site built with Fumadocs. It supports Traditional Chinese (`zh-TW`) and English (`en`).
 
-It is a Next.js app with [Static Export](https://nextjs.org/docs/app/guides/static-exports) configured.
-
-Run development server:
+## Development
 
 ```bash
-npm run dev
-# or
-pnpm dev
-# or
-yarn dev
+bun install --frozen-lockfile
+bun run dev
 ```
 
-Open http://localhost:3000 with your browser to see the result.
+Open [localhost:3000](http://localhost:3000).
 
-## Explore
+## Languages
 
-In the project, you can see:
+| Content | Traditional Chinese | English           |
+| ------- | ------------------- | ----------------- |
+| Home    | `/`                 | `/en`             |
+| About   | `/about`            | `/en/about`       |
+| Blog    | `/blog`             | `/en/blog`        |
+| Article | `/blog/{slug}`      | `/en/blog/{slug}` |
 
-- `lib/source.ts`: Code for content source adapter, [`loader()`](https://fumadocs.dev/docs/headless/source-api) provides the interface to access your content.
-- `lib/layout.shared.tsx`: Shared options for layouts, optional but preferred to keep.
+The home introduction stays in English for both languages. Navigation follows the selected language.
 
-| Route                     | Description                                            |
-| ------------------------- | ------------------------------------------------------ |
-| `app/(home)`              | The route group for your landing page and other pages. |
-| `app/docs`                | The documentation layout and pages.                    |
-| `app/api/search/route.ts` | The Route Handler for search.                          |
+The Fumadocs language menu keeps the current page and stores the selected language in an `FD_LOCALE` cookie.
 
-### Fumadocs MDX
+Configure languages in `lib/i18n.ts`. Keep interface text in `lib/messages.ts` and experience translations in `lib/experience.*.ts`.
 
-A `source.config.ts` config file has been included, you can customise different options like frontmatter schema.
+Keep Chinese articles in `content/blog/{slug}.mdx`. Add each English translation as `{slug}.en.mdx`, with the same publication date and code examples.
 
-Read the [Introduction](https://fumadocs.dev/docs/mdx) for further details.
+Missing translations do not fall back to another language. Each page includes language alternates and a localized OG image.
 
-## Learn More
+## Validation
 
-To learn more about Next.js and Fumadocs, take a look at the following
-resources:
+```bash
+bun run types:check
+bun run lint
+bun run format:check
+bun run check:i18n
+bun run build
+bun run check:build
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js
-  features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-- [Fumadocs](https://fumadocs.dev) - learn about Fumadocs
+`check:i18n` checks routing, language preferences, translation coverage, and article examples.
+
+`check:build` checks generated pages, language alternates, and WebP OG images.
+
+With Orca and the development server running, check language switching in a browser:
+
+```bash
+bun run check:browser
+```
+
+This check catches React script warnings during language changes. It also checks theme initialization and URL parameters.
+
+Language changes load a new document so the theme initialization script can run correctly.
+
+## Production
+
+```bash
+bun run build
+bun run start
+```
+
+Run a Next.js server to support the language proxy. Static file hosting does not run this proxy.

@@ -1,20 +1,29 @@
 import Link from 'next/link';
 import { blog } from '@/lib/source';
 import { PathUtils } from 'fumadocs-core/source';
-import { createMetadata } from '@/lib/metadata';
-import type { Metadata } from 'next';
+import { createLocalizedMetadata } from '@/lib/metadata';
+import { formatDate, type Locale } from '@/lib/i18n';
+import { messages } from '@/lib/messages';
 
-export const metadata: Metadata = createMetadata({
-  title: 'Blog',
-  description: 'Thoughts on code, design, and everything in between.',
-});
+export async function generateMetadata({ params }: { params: Promise<{ lang: Locale }> }) {
+  const { lang } = await params;
+  const text = messages[lang];
+  return createLocalizedMetadata(lang, '/blog', {
+    title: text.blog,
+    description: text.blogDescription,
+    openGraph: { images: `/og/${lang}/home` },
+    twitter: { images: `/og/${lang}/home` },
+  });
+}
 
 function getName(path: string) {
   return PathUtils.basename(path, PathUtils.extname(path));
 }
 
-export default function Page() {
-  const posts = [...blog.getPages()].sort(
+export default async function Page({ params }: { params: Promise<{ lang: Locale }> }) {
+  const { lang } = await params;
+  const text = messages[lang];
+  const posts = [...blog.getPages(lang)].sort(
     (a, b) =>
       new Date(b.data.date ?? getName(b.path)).getTime() -
       new Date(a.data.date ?? getName(a.path)).getTime(),
@@ -26,10 +35,10 @@ export default function Page() {
         {/* Header Section */}
         <div className="mb-12 flex flex-col items-start gap-4 animate-fd-fade-up md:mb-16">
           <h1 className="text-balance text-4xl font-mono font-semibold tracking-tight text-fd-foreground sm:text-5xl lg:text-6xl">
-            BLOG
+            {text.blogHeading}
           </h1>
           <p className="text-balance text-base font-mono leading-relaxed text-fd-muted-foreground sm:text-lg">
-            Thoughts on code, design, and everything in between.
+            {text.blogDescription}
           </p>
         </div>
 
@@ -50,7 +59,7 @@ export default function Page() {
               </div>
 
               <p className="mt-3 md:mt-0 md:ml-6 text-xs font-mono text-fd-muted-foreground whitespace-nowrap">
-                {new Date(post.data.date ?? getName(post.path)).toDateString()}
+                {formatDate(post.data.date ?? getName(post.path), lang)}
               </p>
             </Link>
           ))}
