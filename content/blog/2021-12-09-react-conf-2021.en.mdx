@@ -1,0 +1,104 @@
+---
+title: What did React Conf 2021 bring to React 18?
+date: 2021-12-09
+---
+
+[React Conf 2021](https://conf.reactjs.org) ended today. It revisited features such as `useDeferredValue` and introduced a DevTools timeline and React Forget for automatic memoization. This article covers the newly presented features for React 18.
+
+## useDeferredValue
+
+The early [Concurrent Mode API](https://reactjs.org/docs/concurrent-mode-reference.html#usedeferredvalue) documentation already described `useDeferredValue`. After the React 18 alpha, documentation focused on the related [startTransition](https://github.com/reactwg/react-18/discussions/41) API instead.
+
+The conference finally covered `useDeferredValue` and demonstrated it:
+
+```tsx
+// ...
+
+const [filters, mergeFilters] = useMergeState(defaultFilters);
+
+const deferredFilters = React.useDeferredValue(filters);
+
+return (
+  <Fragment>
+    <Breadcrumbs items={['Projects', name, 'Kanban Board']} />
+    <Header />
+    <Filters
+      projectUsers={project.users}
+      defaultFilters={defaultFilters}
+      filters={filters}
+      mergeFilters={mergeFilters}
+    />
+    <Lists
+      project={project}
+      filters={deferredFilters}
+      updateLocalProjectIssues={updateLocalProjectIssues}
+    />
+
+// ...
+```
+
+Passing `filters` directly to `<Lists>` can cause slow updates on devices with limited CPU performance. `useDeferredValue` produces `deferredFilters` for that expensive work. React can discard outdated renders and use the latest filters instead.
+
+Both `useDeferredValue` and `startTransition` are concurrent features. They mark updates as non-urgent so higher-priority work can interrupt them and keep rendering responsive.
+
+In September, Dan [explained](https://github.com/reactwg/react-18/discussions/100#discussioncomment-1382060) that the team had not found a clear way to describe the hook. It covers situations where `startTransition` cannot be used.
+
+## React Developer Tooling - hooks, profile and timeline
+
+### DevTools can now display hook names
+
+DevTools supported hooks from their introduction, but it could not show their names. It can now retrieve source code through source maps and parse the AST to identify hook names.
+
+![](/images/blog/react-conf-hooks-name.png)
+
+### The profiler explains why components render again
+
+The improved profiler shows update priority, what caused an update, and why a component rendered again.
+
+![](/images/blog/react-conf-profile.png)
+
+### Timeline
+
+![](/images/blog/react-conf-timeline.png)
+
+The conference introduced a new React-specific timeline, similar to the performance tools in browser DevTools.
+
+The timeline provides detailed information and suggests possible performance improvements:
+
+![A suggestion to use a deferred value](/images/blog/react-conf-deferred-value.png)
+
+It also shows Suspense states:
+
+![A suspended component displays a loading state on the right](/images/blog/react-conf-suspense.png)
+
+The timeline can include work outside React, such as `JSON.parse`:
+
+![The timeline captures parseItems outside React](/images/blog/react-conf-parse-items.png)
+
+## React without memo - React Forget
+
+To avoid unnecessary renders, React developers currently add `memo`, `useCallback`, and `useMemo` manually.
+
+The demonstration starts with inefficient code. A few interactions can trigger two or three hundred renders:
+
+![](/images/blog/react-conf-re-render.png)
+
+Adding `useMemo` improves performance, but it adds manual work and requires careful reasoning about dependencies:
+
+![](/images/blog/react-conf-usememo.png)
+
+![](/images/blog/react-conf-usememo-result.png)
+
+The React team is exploring React Forget, a compiler that adds more effective memoization automatically. It moves memoization inside components, analyzes dependencies, and checks when values or caches need to change:
+
+![](/images/blog/react-conf-forget-concept.png)
+
+React Forget remains an internal experiment. The team is investigating cases that increase bundle size or prevent memoization. I look forward to a release that improves both development and user experience.
+
+![](/images/blog/react-conf-forget-result.png)
+
+## Final thoughts
+
+React 18 reached its release candidate stage alongside the conference. At the time of writing, a stable release was expected in two to four weeks, around early 2022. Server Components would not ship in the first release, but the other concurrent features already offer plenty to explore. Learning how to upgrade existing projects and use these features will take time.
+
+> Special thanks to [C. T. Lin](https://github.com/chentsulin) for reviewing this article.

@@ -3,7 +3,10 @@ title: 為什麼我們決定放棄 styled-components 並選擇 linaria
 date: 2022-09-27
 ---
 
-<Callout>此文同步刊載於 [Medium](https://medium.com/dcardlab/為什麼我們決定放棄-styled-components-並選擇-linaria-5c09df5eb7bf)</Callout>
+<Callout>
+  此文同步刊載於
+  [Medium](https://medium.com/dcardlab/為什麼我們決定放棄-styled-components-並選擇-linaria-5c09df5eb7bf)
+</Callout>
 
 ![封面圖](/images/blog/linaria-cover.png)
 
@@ -40,7 +43,7 @@ styled-components 的 prop 用法也會不小心造成效能陷阱，如果像�
 
 ```javascript
 const AnimatedDiv = styled.div`
-  transform: translateY(${props => props.y});
+  transform: translateY(${(props) => props.y});
 `;
 ```
 
@@ -84,6 +87,7 @@ migrate 至 native ESM 也是我們今年的目標之一，但 styled-components
 React 的核心開發者 Dan Abramov 也在一次的 Q&A 說到：
 
 > "for dynamic stuff just use inline styles. For things that don't change use something that compiles to CSS so that it doesn't have extra runtime costs."
+>
 > - Dan Abramov
 
 所以未來的 CSS-in-JS 採用 zero runtime 的形式可以說是勢在必行。
@@ -264,4 +268,3 @@ const blueBackground = 'atm_background_qrst atm_border_mnop';
 - 如果重視 SEO 就避免使用有 runtime 的 CSS in JS，否則 core web vitals 的分數會受效能影響
 - styled-components 的 user 可以考慮 migrate 至 linaria，語法相似但有更好的效能
 - zero runtime 的 solution 建議一定要搭配 atomic css，減少 runtime overhead 的同時也不會增加太多 bundle size
-

@@ -1,0 +1,299 @@
+---
+title: Build fluid user experiences with react-spring
+date: 2021-04-23
+---
+
+I have used [react-spring](https://github.com/pmndrs/react-spring) in our design system for more than two years. It provides React Hooks for animated interfaces and fully supports TypeScript.
+
+I find react-spring easier to use than CSS for interactive animation. Its requestAnimationFrame implementation avoids the performance problems of traditional JavaScript animation libraries. Strong [community recommendations](https://react-spring.io/#people-sayy) also make it my first choice for animation in React.
+
+## What is a spring?
+
+> Read the official [Why springs and not durations](https://react-spring.io/#why-springs-and-not-durations) section for more context.
+
+As its name suggests, react-spring uses a `spring` model.
+
+CSS animations usually require a timing curve and a duration. A spring instead models physical behavior, which makes fluid, natural motion easier to create.
+
+![](/images/blog/react-spring-demo.gif)
+
+The official README quotes Andy Matuschak, a former Apple UIKit developer:
+
+> Animation APIs parameterized by duration and curve are fundamentally opposed to continuous, fluid interactivity.
+
+> In other words, duration and curve parameters do not fit continuous interaction well.
+
+CSS animation can feel awkward in React. With [React Transition Group](https://reactcommunity.org/react-transition-group/), for example, you must configure animation parameters and matching class names. The `useTransition` hook provides a direct way to express the same behavior.
+
+## API
+
+### useSpring
+
+The most basic API is `useSpring`, which animates transitions between values. Here is a simple example:
+
+```tsx
+function Demo() {
+  const [open, setOpen] = useState(false);
+  const props = useSpring({ width: open ? 240 : 40 });
+
+  return (
+    <animated.div
+      style={{
+        lineHeight: '40px',
+        textAlign: 'center',
+        height: 40,
+        backgroundColor: 'azure',
+        border: '1px solid darkslategrey',
+        borderRadius: 8,
+        cursor: 'pointer',
+        ...props,
+      }}
+      onClick={() => setOpen((prev) => !prev)}
+    >
+      {props.width.to((x) => x.toFixed(0))}
+    </animated.div>
+  );
+}
+```
+
+Click the div to animate its width from 40px to 240px. Its children display the current value.
+
+All animated properties returned by react-spring are [SpringValue](https://react-spring.io/classes/spring-value) objects. Pass them to an `animated.x` component when you use them as styles.
+
+The API also supports transitions between string values:
+
+```tsx
+function Demo() {
+  const [open, setOpen] = useState(false);
+  const props = useSpring({
+    transform: open ? 'translateX(100px)' : 'translateX(0px)',
+  });
+
+  return (
+    <animated.div
+      style={{
+        lineHeight: '40px',
+        textAlign: 'center',
+        height: 40,
+        width: 60,
+        backgroundColor: 'azure',
+        border: '1px solid darkslategrey',
+        borderRadius: 8,
+        cursor: 'pointer',
+        ...props,
+      }}
+      onClick={() => setOpen((prev) => !prev)}
+    >
+      Item
+    </animated.div>
+  );
+}
+```
+
+Common `useSpring` examples include expanding a Collapse component and moving a Switch control when its state changes.
+
+<code url="https://codesandbox.io/embed/github/pmndrs/react-spring/tree/master/demo/src/sandboxes/animating-auto?fontsize=14&hidenavigation=1&theme=dark&view=preview" />
+
+> This is an official example. See [useSpring](https://react-spring.io/hooks/use-spring) for API details and more examples.
+
+### useSprings
+
+Like `useSpring`, `useSprings` animates values. The difference is that it manages an array of springs:
+
+```jsx
+const springs = useSprings(
+  number,
+  items.map((item) => ({ opacity: item.opacity })),
+);
+
+return springs.map((styles) => <animated.div style={styles} />);
+```
+
+<code url="https://codesandbox.io/embed/github/pmndrs/react-spring/tree/master/demo/src/sandboxes/draggable-list?fontsize=14&hidenavigation=1&theme=dark&view=preview" />
+
+> This is an official example. See [useSprings](https://react-spring.io/hooks/use-springs) for API details and more examples.
+
+### useTransition
+
+I use `useTransition` frequently. It animates components or list items as they mount and unmount, making interface changes less abrupt:
+
+```tsx
+function Demo() {
+  const [toggle, setToggle] = useState(false);
+  const transitions = useTransition(toggle, {
+    from: { opacity: 0 },
+    enter: { opacity: 1 },
+    leave: { opacity: 0 },
+  });
+
+  return (
+    <div style={{ display: 'flex', height: 40 }}>
+      <button style={{ marginRight: 16 }} onClick={() => setToggle((prev) => !prev)}>
+        {toggle ? 'Hide' : 'Show'}
+      </button>
+      {transitions(
+        (props, item) =>
+          item && (
+            <animated.div
+              style={{
+                fontSize: 40,
+                lineHeight: 1,
+                ...props,
+              }}
+            >
+              😄
+            </animated.div>
+          ),
+      )}
+    </div>
+  );
+}
+```
+
+<code url="https://codesandbox.io/embed/github/pmndrs/react-spring/tree/master/demo/src/sandboxes/simple-transition?fontsize=14&hidenavigation=1&theme=dark&view=preview" />
+
+> This is an official example. See [useTransition](https://react-spring.io/hooks/use-transition) for API details and more examples.
+
+### useTrail
+
+Like `useSprings`, `useTrail` manages multiple springs. Each spring follows the previous one instead of starting at the same time.
+
+```jsx
+const trail = useTrail(amount, { opacity: 1 });
+
+return trail.map((styles) => <animated.div style={styles} />);
+```
+
+<code url="https://codesandbox.io/embed/github/pmndrs/react-spring/tree/master/demo/src/sandboxes/trail?fontsize=14&hidenavigation=1&theme=dark&view=preview" />
+
+> This is an official example. See [useTrail](https://react-spring.io/hooks/use-trail) for API details and more examples.
+
+### useChain
+
+Use `useChain` to connect different spring hooks. The next animation starts after the previous animation finishes.
+
+You can also specify a delay between animations. The following code comes from an official example:
+
+```typescript
+const springRef = useSpringRef();
+const props = useSpring({ ...values, ref: springRef });
+
+const transitionRef = useSpringRef();
+const transitions = useTransition({ ...values, ref: transitionRef });
+// Run the transition after the spring animation finishes.
+useChain([springRef, transitionRef]);
+
+return (
+  <animated.div style={props}>
+    {transitions((styles) => (
+      <animated.div style={styles} />
+    ))}
+  </animated.div>
+);
+```
+
+> Before version 9, this pattern used React `useRef`. From version 9, use the `useSpringRef` hook from react-spring.
+
+<code url="https://codesandbox.io/embed/github/pmndrs/react-spring/tree/master/demo/src/sandboxes/chain?fontsize=14&hidenavigation=1&theme=dark&view=preview" />
+
+> This is an official example. See [useChain](https://react-spring.io/hooks/use-chain) for API details and more examples.
+
+## config
+
+> See [Config](https://react-spring.io/common/configs) for the complete parameter list.
+
+You usually do not need to change the configuration. Use a preset when you want a tighter or more relaxed animation:
+
+```javascript
+import { useSpring, config } from 'react-spring';
+
+useSpring({ ..., config: config.stiff });
+```
+
+Each preset changes the motion. The `stiff` preset makes it tighter. See [Presets](https://react-spring.io/common/configs#presets) for other options.
+
+<code url="https://codesandbox.io/embed/react-spring-preset-configs-kdv7r?fontsize=14&hidenavigation=1&theme=dark&view=preview" />
+
+You can also adjust individual parameters. Common choices include:
+
+- `mass`: mass
+- `tension`: tension
+- `friction`: friction
+- `velocity`: velocity
+- `precision`: precision
+
+Traditional easing functions and durations are also supported. See [Config](https://react-spring.io/common/configs#configs) for the available parameters.
+
+<code url="https://codesandbox.io/embed/react-spring-config-x1vjb?fontsize=14&hidenavigation=1&theme=dark&view=preview" />
+
+## a11y & testing
+
+Version 9.0.0 introduced `Globals.assign` to configure react-spring globally.
+
+One useful option is `skipAnimation`. Set it to `true` to disable all react-spring animations. This lets you respect a device setting that requests reduced motion.
+
+See [Accessibility](https://react-spring.io/guides/accessibility#accessibility) for more details. Here is an excerpt:
+
+```javascript
+import { useReducedMotion } from 'react-reduce-motion';
+import { Globals } from 'react-spring';
+
+const App = () => {
+  const prefersReducedMotion = useReducedMotion();
+
+  useEffect(() => {
+    Globals.assign({
+      skipAnimation: prefersReducedMotion,
+    });
+  }, [prefersReducedMotion]);
+  // ...
+};
+```
+
+This option also matters when testing a design system. Tests must check every component, but animations can delay the result of a behavior check.
+
+For example, each Select test can wait for the menu animation. With many tests, those delays accumulate. I previously replaced requestAnimationFrame globally and manually flushed animation frames:
+
+```typescript
+import createMockRaf, { MockRaf } from '@react-spring/mock-raf';
+
+let mockRaf: MockRaf & { flushSpring: () => void };
+const raf = window.requestAnimationFrame;
+const caf = window.cancelAnimationFrame;
+
+const useMockRaf = () => {
+  beforeAll(() => {
+    const createdMockRaf = createMockRaf();
+    mockRaf = {
+      ...createdMockRaf,
+      flushSpring: () => mockRaf.step({ count: 32767 }),
+    };
+
+    window.requestAnimationFrame = mockRaf.raf;
+    window.cancelAnimationFrame = mockRaf.cancel;
+  });
+
+  afterAll(() => {
+    window.requestAnimationFrame = raf;
+    window.cancelAnimationFrame = caf;
+  });
+};
+
+export { mockRaf, useMockRaf };
+```
+
+Now, add the following configuration to the preload file before your tests:
+
+```typescript
+Globals.assign({
+  skipAnimation: true,
+});
+```
+
+The tests can then skip all animations.
+
+## Final thoughts
+
+There are more APIs to explore, especially after the improvements in version 9. Examples include the [imperative API](https://react-spring.io/common/imperatives-and-refs#imperative-api), [async animations](https://react-spring.io/changelog#improved-async-animations), and [animation events](https://react-spring.io/common/props#events).
+
+Try react-spring when your project needs animation. Its simple API and natural motion make it a useful option.

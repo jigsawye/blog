@@ -1,0 +1,289 @@
+---
+title: Generate GraphQL operation types for a better React development experience
+date: 2021-04-28
+---
+
+GraphQL generates API documentation from a schema, reducing errors from manually written documentation. Frontend developers still need types to understand responses instead of working with an `any` data object.
+
+With `apollo-client`, you can pass data and variable types to the `useQuery` generic parameters. This identifies response types and checks query variables during development:
+
+```tsx
+interface Post {
+  id: number;
+  title: string;
+  content: string;
+}
+
+interface PostData {
+  post: Post;
+}
+
+interface PostVars {
+  postId: number;
+}
+
+const GET_POST = gql`
+  query GetPost($postId: Int!) {
+    post(postId: $postId) {
+      id
+      title
+      content
+    }
+  }
+`;
+
+const PostPage = () => {
+  const { loading, data, error } = useQuery<PostData, PostVars>(GET_POST, {
+    variables: {
+      postId: 1,
+    },
+  });
+
+  if (loading) {
+    return <p>Loading...</p>;
+  }
+
+  if (!data || error) {
+    return <p>Error :(</p>;
+  }
+
+  // with type
+  return (
+    <div>
+      <p>Title {data.post.title}</p>
+      <p>Title {data.post.content}</p>
+    </div>
+  );
+};
+```
+
+These annotations still depend on manual work. When the API changes, developers must update the types, which creates another opportunity for mistakes.
+
+In the `server API → API documentation → client types` workflow, GraphQL already automates the first step. Automating the remaining step can improve development speed and reduce errors.
+
+## Code generator
+
+Apollo provides [apollo-codegen](https://www.apollographql.com/docs/react/development-testing/developer-tooling/#apollo-codegen). Here, I will introduce the more flexible [graphql-code-generator](https://www.graphql-code-generator.com/).
+
+Its plugins support more than Apollo Client. Options include Flow, Reason, Vue Apollo, and Urql, as well as languages such as Java and .NET.
+
+## Plugins
+
+GraphQL Code Generator has many plugins for different use cases. Common choices in the Apollo ecosystem include:
+
+- `typescript`: generates the base schema type definitions.
+- `typescript-operations`: generates types for client queries, mutations, subscriptions, and fragments.
+- `typescript-resolvers`: generates resolver types for the server schema.
+- `typescript-react-apollo`: generates Apollo Client hooks such as `useQuery` and `useMutation`.
+- `fragment-matcher`: generates a fragment matcher for schemas with union types.
+- `typescript-apollo-client-helpers`: generates types for Apollo Client 3 type policies.
+
+See [All Plugins](https://www.graphql-code-generator.com/docs/plugins/index) for more options.
+
+## Config
+
+After installation, create a configuration file to define how the project generates types:
+
+```bash
+yarn graphql-codegen --config ./path/to/config.yml
+```
+
+A typical configuration looks like this. See the [configuration reference](https://www.graphql-code-generator.com/docs/getting-started/codegen-config#available-options) for all options.
+
+```yaml
+schema: http://localhost:3000/graphql
+generates:
+  ./src/types.ts:
+    plugins:
+      - typescript
+```
+
+This configuration generates `src/types.ts` from the schema available at `http://localhost:3000/graphql`.
+
+## Gen files
+
+We also want types and hooks for operations such as `useQuery` and `useMutation`. Follow the steps below.
+
+Assume the schema contains these types:
+
+```graphql
+type Query {
+  post(postId: String!): Post
+}
+
+type Post {
+  id: ID!
+  title: String!
+  content: String!
+}
+```
+
+The configuration from the previous section generates the following definitions:
+
+```typescript
+// src/types.ts
+
+export type Maybe<T> = T | null;
+
+/** All built-in and custom scalars, mapped to their actual values */
+export type Scalars = {
+  ID: string;
+  String: string;
+  Boolean: boolean;
+  Int: number;
+  Float: number;
+};
+
+export type Query = {
+  __typename?: 'Query';
+  post?: Maybe<Post>;
+};
+
+export type QueryPostArgs = {
+  postId: Scalars['String'];
+};
+
+export type Post = {
+  __typename?: 'Post';
+  id: Scalars['ID'];
+  title: Scalars['String'];
+  content: Scalars['String'];
+};
+```
+
+You can already use these definitions for manual annotations. To reduce manual work and mistakes, update the configuration to generate operation types as well:
+
+```yaml
+schema: http://localhost:3000/graphql
+generates:
+  ./src/types.ts:
+    plugins:
+      - typescript
+  ./src:
+    preset: near-operation-file
+    presetConfig:
+      extension: .generated.ts
+      baseTypesPath: ./src/types.ts
+    documents:
+      - './src/**/*.graphql.ts'
+    plugins:
+      - typescript-operations
+      - typescript-react-apollo
+```
+
+The `preset` option controls how files are generated. I want operation files beside their components, so I use `near-operation-file` to generate files in the same directory.
+
+For example, `PostPage.graphql.ts` produces `PostPage.graphql.generated.ts`. See the [preset documentation](https://www.graphql-code-generator.com/docs/presets/near-operation-file) for more details.
+
+The two plugins introduced earlier generate operation types and hooks such as `useQuery`.
+
+Create a query operation:
+
+```typescript
+// src/PostPage.graphql.ts
+
+export const GetPostQuery = gql`
+  query GetPost($postId: String!) {
+    post(id: $postId) {
+      id
+      title
+      content
+    }
+  }
+`;
+```
+
+Run code generation to produce its `.generated.ts` file:
+
+```typescript
+// src/PostPage.graphql.generated.ts
+
+import * as Types from './types';
+import * as Operations from './PostPage.graphql';
+import * as Apollo from '@apollo/client';
+const defaultOptions = {};
+
+export type GetPostQueryVariables = Exact<{
+  postId: Scalars['String'];
+}>;
+
+export type GetPostQuery = { __typename?: 'Query' } & {
+  post?: Maybe<{ __typename?: 'Post' } & Pick<Types.Post, 'id', 'title', 'content'>>;
+};
+
+/**
+ * __useGetPostQuery__
+ *
+ * To run a query within a React component, call `useGetPostQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPostQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPostQuery({
+ *   variables: {
+ *      postId: // value for 'postId'
+ *   },
+ * });
+ */
+export function useGetPostQuery(
+  baseOptions: Apollo.QueryHookOptions<GetPostQuery, GetPostQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetPostQuery, GetPostQueryVariables>(GetPostDocument, options);
+}
+export function useGetPostLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetPostQuery, GetPostQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetPostQuery, GetPostQueryVariables>(GetPostDocument, options);
+}
+export type GetPostQueryHookResult = ReturnType<typeof useGetPostQuery>;
+export type GetPostLazyQueryHookResult = ReturnType<typeof useGetPostLazyQuery>;
+export type GetPostQueryResult = Apollo.QueryResult<GetPostQuery, GetPostQueryVariables>;
+```
+
+The generated file includes usage examples. Follow one inside the component:
+
+```tsx
+// src/PostPage.tsx
+
+import { useGetPostQuery } from './PostPage.graphql.generated.ts';
+
+const PostPage = () => {
+  const { data, loading, error } = useGetPostQuery({
+    variables: {
+      postId: 1,
+    },
+  });
+
+  if (loading) {
+    return <p>Loading...</p>;
+  }
+
+  if (!data || error) {
+    return <p>Error :(</p>;
+  }
+
+  // with type
+  return (
+    <div>
+      <p>Title {data.post.title}</p>
+      <p>Title {data.post.content}</p>
+    </div>
+  );
+};
+```
+
+## Practical tips
+
+- Exclude generated files from ESLint, Prettier, and similar checks.
+- Use `eslint-plugin-graphql` to validate frontend operations.
+- Use `lint-staged` to detect schema changes and run code generation.
+
+## Final thoughts
+
+This example covers only part of the available functionality. You can generate fragment types to check component props, define scalar types more precisely, and configure generated type names. See the [official documentation](https://www.graphql-code-generator.com/docs/getting-started/index) for further options.
+
+Generated operation types and hooks reduce manual mistakes and make response types explicit. They improve development speed and code quality. Try the workflow, and share any feedback or ideas.
