@@ -1,7 +1,7 @@
 import type { Locale } from './i18n';
 
 export const zawa = {
-  name: 'zawa.archive',
+  name: 'zawa.tw',
   url: 'https://zawa.tw',
   translations: {
     en: {
